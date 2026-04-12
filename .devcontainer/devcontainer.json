@@ -22,7 +22,8 @@
         "github.copilot-chat",
         "GitHub.vscode-pull-request-github",
         "bierner.markdown-mermaid",
-        "DavidAnson.vscode-markdownlint"
+        "DavidAnson.vscode-markdownlint",
+        "formulahendry.github-actions"
       ],
       "settings": {
         "editor.formatOnSave": true,
@@ -36,7 +37,7 @@
         "ts.preferences.importModuleSpecifier": "relative",
         "eslint.workingDirectories": ["src"],
         "jest.jestCommandLine": "npx jest",
-        "jest.rootPath": ".",
+        "jest.rootPath": "src",
         "dev.containers.dockerPath": "podman"
       }
     }
