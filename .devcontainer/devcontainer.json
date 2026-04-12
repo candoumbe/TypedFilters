@@ -1,0 +1,46 @@
+{
+  "name": "DataFilters (TypeScript)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/copilot-cli": {},
+    "ghcr.io/jpawlowski/devcontainer-features/cascadia-code:1": {},
+    "ghcr.io/nils-geistmann/devcontainers-features/zsh": {
+      "plugins": "git npm gh git-prompt branch"
+    },
+    "ghcr.io/devcontainers-extra/features/jest": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "Orta.vscode-jest",
+        "editorconfig.editorconfig",
+        "github.copilot-chat",
+        "GitHub.vscode-pull-request-github",
+        "bierner.markdown-mermaid",
+        "DavidAnson.vscode-markdownlint"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.fontLigatures": true,
+        "editor.fontFamily": "'Cascadia Code Font', 'Caskaydia Cove NF', 'Fira Code', Consolas, 'Courier New', monospace",
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.fontFamily": "'CascadiaCodeNF'"
+        },
+        "ts.preferences.importModuleSpecifier": "relative",
+        "eslint.workingDirectories": ["src"],
+        "jest.jestCommandLine": "npx jest",
+        "jest.rootPath": "src",
+        "dev.containers.dockerPath": "podman"
+      }
+    }
+  },
+  "postCreateCommand": "zsh ./.devcontainer/scripts/post-create.sh",
+  "postStartCommand": "zsh ./.devcontainer/scripts/post-start.sh"
+}
