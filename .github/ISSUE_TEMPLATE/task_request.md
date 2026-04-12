@@ -6,7 +6,7 @@ labels: "task 💪🏾"
 assignees: candoumbe
 ---
 
-## **Describe the work that need to be done**
+## **Describe the work that needs to be done**
 
 _Ex: Code refactoring_
 
