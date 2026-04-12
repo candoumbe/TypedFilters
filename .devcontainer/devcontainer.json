@@ -36,7 +36,7 @@
         "ts.preferences.importModuleSpecifier": "relative",
         "eslint.workingDirectories": ["src"],
         "jest.jestCommandLine": "npx jest",
-        "jest.rootPath": "src",
+        "jest.rootPath": ".",
         "dev.containers.dockerPath": "podman"
       }
     }
