@@ -236,13 +236,13 @@ class InternalFilterParser extends EmbeddedActionsParser {
     (): void => {
       this.OR([
         {
-          GATE: () => this.isFieldAssignmentStart(),
-          ALT: () => {
+          GATE: (): boolean => this.isFieldAssignmentStart(),
+          ALT: (): void => {
             this.SUBRULE(this.fieldAssignment);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             this.SUBRULE(this.inheritedValuePart);
           },
         },
@@ -251,21 +251,18 @@ class InternalFilterParser extends EmbeddedActionsParser {
   );
 
   /** Parses "fieldName = valueExpression" and records the result. */
-  private readonly fieldAssignment = this.RULE(
-    "fieldAssignment",
-    (): void => {
-      const field = this.SUBRULE(this.fieldNameRule);
-      this.CONSUME(Equals);
-      this.ACTION(() => {
-        this.currentField = field;
-        this.encounteredFields.add(field);
-      });
-      const filter = this.SUBRULE(this.valueExpression);
-      this.ACTION(() => {
-        this.parsedParts.push({ filter, field });
-      });
-    },
-  );
+  private readonly fieldAssignment = this.RULE("fieldAssignment", (): void => {
+    const field = this.SUBRULE(this.fieldNameRule);
+    this.CONSUME(Equals);
+    this.ACTION(() => {
+      this.currentField = field;
+      this.encounteredFields.add(field);
+    });
+    const filter = this.SUBRULE(this.valueExpression);
+    this.ACTION(() => {
+      this.parsedParts.push({ filter, field });
+    });
+  });
 
   /** Parses a value expression that inherits the field from the last assignment. */
   private readonly inheritedValuePart = this.RULE(
@@ -296,16 +293,16 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let result: IFilter;
       this.OR([
         {
-          GATE: () => {
+          GATE: (): boolean => {
             const tt = this.LA(1).tokenType;
             return tt === LeftSquare || tt === RightSquare;
           },
-          ALT: () => {
+          ALT: (): void => {
             result = this.SUBRULE(this.rangeExpression);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             result = this.SUBRULE(this.pipeExpression);
           },
         },
@@ -318,28 +315,25 @@ class InternalFilterParser extends EmbeddedActionsParser {
    * Pipe-separated alternatives: "a|b" produces OrFilter, "a|b|c" produces
    * OneOfFilter.
    */
-  private readonly pipeExpression = this.RULE(
-    "pipeExpression",
-    (): IFilter => {
-      const first = this.SUBRULE(this.negatedExpr);
-      const parts: IFilter[] = [first];
+  private readonly pipeExpression = this.RULE("pipeExpression", (): IFilter => {
+    const first = this.SUBRULE(this.negatedExpr);
+    const parts: IFilter[] = [first];
 
-      this.MANY(() => {
-        this.CONSUME(Pipe);
-        parts.push(this.SUBRULE2(this.negatedExpr));
-      });
+    this.MANY(() => {
+      this.CONSUME(Pipe);
+      parts.push(this.SUBRULE2(this.negatedExpr));
+    });
 
-      let result: IFilter;
-      if (parts.length === 1) {
-        result = parts[0];
-      } else if (parts.length === 2) {
-        result = new OrFilter(parts[0], parts[1]);
-      } else {
-        result = new OneOfFilter(parts);
-      }
-      return result;
-    },
-  );
+    let result: IFilter;
+    if (parts.length === 1) {
+      result = parts[0];
+    } else if (parts.length === 2) {
+      result = new OrFilter(parts[0], parts[1]);
+    } else {
+      result = new OneOfFilter(parts);
+    }
+    return result;
+  });
 
   /** Optional "!" negation prefix followed by a primary expression. */
   private readonly negatedExpr = this.RULE("negatedExpr", (): IFilter => {
@@ -417,7 +411,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
 
       this.OR([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME(LeftSquare);
             this.ACTION(() => {
               openInclusive = true;
@@ -425,7 +419,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME(RightSquare);
             this.ACTION(() => {
               openInclusive = false;
@@ -437,12 +431,12 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let minValue: string | undefined;
       this.OR2([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME(Asterisk);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             minValue = this.SUBRULE(this.rangeValueChunks);
           },
         },
@@ -453,12 +447,12 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let maxValue: string | undefined;
       this.OR3([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME2(Asterisk);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             maxValue = this.SUBRULE2(this.rangeValueChunks);
           },
         },
@@ -467,7 +461,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let closeInclusive = true;
       this.OR4([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME2(RightSquare);
             this.ACTION(() => {
               closeInclusive = true;
@@ -475,7 +469,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME2(LeftSquare);
             this.ACTION(() => {
               closeInclusive = false;
@@ -529,12 +523,12 @@ class InternalFilterParser extends EmbeddedActionsParser {
       this.AT_LEAST_ONE(() => {
         this.OR([
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Text));
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Escaped));
             },
           },
@@ -559,17 +553,17 @@ class InternalFilterParser extends EmbeddedActionsParser {
       this.AT_LEAST_ONE(() => {
         this.OR([
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Text));
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Escaped));
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += this.CONSUME(TO).image;
             },
           },
@@ -591,17 +585,17 @@ class InternalFilterParser extends EmbeddedActionsParser {
     this.AT_LEAST_ONE(() => {
       this.OR([
         {
-          ALT: () => {
+          ALT: (): void => {
             name += tokenValue(this.CONSUME(Text));
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             name += tokenValue(this.CONSUME(Escaped));
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             name += this.CONSUME(TO).image;
           },
         },
@@ -701,10 +695,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
    * Reset all per-call state, lex the expression, run the parser and return
    * the assembled IFilter.  Throws on lexer or parser errors.
    */
-  public parseExpression(
-    expression: string,
-    options?: FilterOptions,
-  ): IFilter {
+  public parseExpression(expression: string, options?: FilterOptions): IFilter {
     this.currentField = "";
     this.currentOptions = options;
     this.parsedParts = [];
