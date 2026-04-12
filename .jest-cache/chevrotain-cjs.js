@@ -16,7 +16,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// ../node_modules/chevrotain/lib/src/api.js
+// node_modules/chevrotain/lib/src/api.js
 var api_exports = {};
 __export(api_exports, {
   Alternation: () => Alternation,
@@ -61,10 +61,10 @@ __export(api_exports, {
 });
 module.exports = __toCommonJS(api_exports);
 
-// ../node_modules/chevrotain/lib/src/version.js
+// node_modules/chevrotain/lib/src/version.js
 var VERSION = "12.0.0";
 
-// ../node_modules/@chevrotain/utils/lib/src/print.js
+// node_modules/@chevrotain/utils/lib/src/print.js
 function PRINT_ERROR(msg) {
   if (console && console.error) {
     console.error(`Error: ${msg}`);
@@ -76,7 +76,7 @@ function PRINT_WARNING(msg) {
   }
 }
 
-// ../node_modules/@chevrotain/utils/lib/src/timer.js
+// node_modules/@chevrotain/utils/lib/src/timer.js
 function timer(func) {
   const start = (/* @__PURE__ */ new Date()).getTime();
   const val = func();
@@ -85,7 +85,7 @@ function timer(func) {
   return { time: total, value: val };
 }
 
-// ../node_modules/@chevrotain/utils/lib/src/to-fast-properties.js
+// node_modules/@chevrotain/utils/lib/src/to-fast-properties.js
 function toFastProperties(toBecomeFast) {
   function FakeConstructor() {
   }
@@ -101,7 +101,7 @@ function toFastProperties(toBecomeFast) {
   (0, eval)(toBecomeFast);
 }
 
-// ../node_modules/@chevrotain/gast/lib/src/model.js
+// node_modules/@chevrotain/gast/lib/src/model.js
 function tokenLabel(tokType) {
   if (hasTokenLabel(tokType)) {
     return tokType.LABEL;
@@ -310,7 +310,7 @@ function pickOnlyDefined(obj) {
   return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== void 0));
 }
 
-// ../node_modules/@chevrotain/gast/lib/src/visitor.js
+// node_modules/@chevrotain/gast/lib/src/visitor.js
 var GAstVisitor = class {
   visit(node) {
     const nodeAny = node;
@@ -372,7 +372,7 @@ var GAstVisitor = class {
   }
 };
 
-// ../node_modules/@chevrotain/gast/lib/src/helpers.js
+// node_modules/@chevrotain/gast/lib/src/helpers.js
 function isSequenceProd(prod) {
   return prod instanceof Alternative || prod instanceof Option || prod instanceof Repetition || prod instanceof RepetitionMandatory || prod instanceof RepetitionMandatoryWithSeparator || prod instanceof RepetitionWithSeparator || prod instanceof Terminal || prod instanceof Rule;
 }
@@ -423,7 +423,7 @@ function getProductionDslName(prod) {
   }
 }
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/rest.js
+// node_modules/chevrotain/lib/src/parse/grammar/rest.js
 var RestWalker = class {
   walk(prod, prevRest = []) {
     prod.definition.forEach((subProd, index) => {
@@ -503,7 +503,7 @@ function restForRepetitionWithSeparator(repSepProd, currRest, prevRest) {
   return fullRepSepRest;
 }
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/first.js
+// node_modules/chevrotain/lib/src/parse/grammar/first.js
 function first(prod) {
   if (prod instanceof NonTerminal) {
     return first(prod.referencedRule);
@@ -543,10 +543,10 @@ function firstForTerminal(terminal) {
   return [terminal.terminalType];
 }
 
-// ../node_modules/chevrotain/lib/src/parse/constants.js
+// node_modules/chevrotain/lib/src/parse/constants.js
 var IN = "_~IN~_";
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/follow.js
+// node_modules/chevrotain/lib/src/parse/grammar/follow.js
 var ResyncFollowsWalker = class extends RestWalker {
   constructor(topProd) {
     super();
@@ -579,7 +579,7 @@ function buildBetweenProdsFollowPrefix(inner, occurenceInParent) {
   return inner.name + occurenceInParent + IN;
 }
 
-// ../node_modules/@chevrotain/regexp-to-ast/lib/src/utils.js
+// node_modules/@chevrotain/regexp-to-ast/lib/src/utils.js
 function cc(char) {
   return char.charCodeAt(0);
 }
@@ -612,7 +612,7 @@ function isCharacter(obj) {
   return obj["type"] === "Character";
 }
 
-// ../node_modules/@chevrotain/regexp-to-ast/lib/src/character-classes.js
+// node_modules/@chevrotain/regexp-to-ast/lib/src/character-classes.js
 var digitsCharCodes = [];
 for (let i = cc("0"); i <= cc("9"); i++) {
   digitsCharCodes.push(i);
@@ -653,7 +653,7 @@ var whitespaceCodes = [
   cc("\uFEFF")
 ];
 
-// ../node_modules/@chevrotain/regexp-to-ast/lib/src/regexp-parser.js
+// node_modules/@chevrotain/regexp-to-ast/lib/src/regexp-parser.js
 var hexDigitPattern = /[0-9a-fA-F]/;
 var decimalPattern = /[0-9]/;
 var decimalPatternNoZero = /[1-9]/;
@@ -1356,7 +1356,7 @@ var RegExpParser = class {
   }
 };
 
-// ../node_modules/@chevrotain/regexp-to-ast/lib/src/base-regexp-visitor.js
+// node_modules/@chevrotain/regexp-to-ast/lib/src/base-regexp-visitor.js
 var BaseRegExpVisitor = class {
   visitChildren(node) {
     for (const key in node) {
@@ -1466,7 +1466,7 @@ var BaseRegExpVisitor = class {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/scan/reg_exp_parser.js
+// node_modules/chevrotain/lib/src/scan/reg_exp_parser.js
 var regExpAstCache = {};
 var regExpParser = new RegExpParser();
 function getRegExpAst(regExp) {
@@ -1483,7 +1483,7 @@ function clearRegExpParserCache() {
   regExpAstCache = {};
 }
 
-// ../node_modules/chevrotain/lib/src/scan/reg_exp.js
+// node_modules/chevrotain/lib/src/scan/reg_exp.js
 var complementErrorMessage = "Complement Sets are not supported for first char optimization";
 var failedOptimizationPrefixMsg = 'Unable to use "first char" lexer optimizations:\n';
 function getOptimizedStartCodesIndices(regExp, ensureOptimizations = false) {
@@ -1699,7 +1699,7 @@ function canMatchCharCode(charCodes, pattern) {
   }
 }
 
-// ../node_modules/chevrotain/lib/src/scan/lexer.js
+// node_modules/chevrotain/lib/src/scan/lexer.js
 var PATTERN = "PATTERN";
 var DEFAULT_MODE = "defaultMode";
 var MODES = "modes";
@@ -2381,7 +2381,7 @@ function initCharCodeToOptimizedIndexMap() {
   }
 }
 
-// ../node_modules/chevrotain/lib/src/scan/tokens.js
+// node_modules/chevrotain/lib/src/scan/tokens.js
 function tokenStructuredMatcher(tokInstance, tokConstructor) {
   const instanceType = tokInstance.tokenTypeIdx;
   if (instanceType === tokConstructor.tokenTypeIdx) {
@@ -2480,7 +2480,7 @@ function isTokenType(tokType) {
   return Object.hasOwn(tokType !== null && tokType !== void 0 ? tokType : {}, "tokenTypeIdx");
 }
 
-// ../node_modules/chevrotain/lib/src/scan/lexer_errors_public.js
+// node_modules/chevrotain/lib/src/scan/lexer_errors_public.js
 var defaultLexerErrorProvider = {
   buildUnableToPopLexerModeMessage(token) {
     return `Unable to pop Lexer Mode after encountering Token ->${token.image}<- The Mode Stack is empty`;
@@ -2490,7 +2490,7 @@ var defaultLexerErrorProvider = {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/scan/lexer_public.js
+// node_modules/chevrotain/lib/src/scan/lexer_public.js
 var LexerDefinitionErrorType;
 (function(LexerDefinitionErrorType2) {
   LexerDefinitionErrorType2[LexerDefinitionErrorType2["MISSING_PATTERN"] = 0] = "MISSING_PATTERN";
@@ -3026,7 +3026,7 @@ var Lexer = class {
 Lexer.SKIPPED = "This marks a skipped Token pattern, this means each token identified by it will be consumed and then thrown into oblivion, this can be used to for example to completely ignore whitespace.";
 Lexer.NA = /NOT_APPLICABLE/;
 
-// ../node_modules/chevrotain/lib/src/scan/tokens_public.js
+// node_modules/chevrotain/lib/src/scan/tokens_public.js
 function tokenLabel2(tokType) {
   if (hasTokenLabel2(tokType)) {
     return tokType.LABEL;
@@ -3108,7 +3108,7 @@ function tokenMatcher(token, tokType) {
   return tokenStructuredMatcher(token, tokType);
 }
 
-// ../node_modules/chevrotain/lib/src/parse/errors_public.js
+// node_modules/chevrotain/lib/src/parse/errors_public.js
 var defaultParserErrorProvider = {
   buildMismatchTokenMessage({ expected, actual, previous, ruleName }) {
     const hasLabel = hasTokenLabel2(expected);
@@ -3270,7 +3270,7 @@ see: https://en.wikipedia.org/wiki/LL_parser#Left_factoring.`;
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/resolver.js
+// node_modules/chevrotain/lib/src/parse/grammar/resolver.js
 function resolveGrammar(topLevels, errMsgProvider) {
   const refResolver = new GastRefResolverVisitor(topLevels, errMsgProvider);
   refResolver.resolveRefs();
@@ -3305,7 +3305,7 @@ var GastRefResolverVisitor = class extends GAstVisitor {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/interpreter.js
+// node_modules/chevrotain/lib/src/parse/grammar/interpreter.js
 var AbstractNextPossibleTokensWalker = class extends RestWalker {
   constructor(topProd, path) {
     super();
@@ -3716,7 +3716,7 @@ function expandTopLevelRule(topRule, currIdx, currRuleStack, currOccurrenceStack
   };
 }
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/lookahead.js
+// node_modules/chevrotain/lib/src/parse/grammar/lookahead.js
 var PROD_TYPE;
 (function(PROD_TYPE2) {
   PROD_TYPE2[PROD_TYPE2["OPTION"] = 0] = "OPTION";
@@ -4084,7 +4084,7 @@ function areTokenCategoriesNotUsed(lookAheadPaths) {
   return lookAheadPaths.every((singleAltPaths) => singleAltPaths.every((singlePath) => singlePath.every((token) => token.categoryMatches.length === 0)));
 }
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/checks.js
+// node_modules/chevrotain/lib/src/parse/grammar/checks.js
 function validateLookahead(options) {
   const lookaheadValidationErrorMessages = options.lookaheadStrategy.validate({
     rules: options.rules,
@@ -4477,7 +4477,7 @@ function checkTerminalAndNoneTerminalsNameSpace(topLevels, tokenTypes, errMsgPro
   return errors;
 }
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js
+// node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js
 function resolveGrammar2(options) {
   const actualOptions = Object.assign({ errMsgProvider: defaultGrammarResolverErrorProvider }, options);
   const topRulesTable = {};
@@ -4492,7 +4492,7 @@ function validateGrammar2(options) {
   return validateGrammar(options.rules, options.tokenTypes, errMsgProvider, options.grammarName);
 }
 
-// ../node_modules/chevrotain/lib/src/parse/exceptions_public.js
+// node_modules/chevrotain/lib/src/parse/exceptions_public.js
 var MISMATCHED_TOKEN_EXCEPTION = "MismatchedTokenException";
 var NO_VIABLE_ALT_EXCEPTION = "NoViableAltException";
 var EARLY_EXIT_EXCEPTION = "EarlyExitException";
@@ -4546,7 +4546,7 @@ var EarlyExitException = class extends RecognitionException {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js
 var EOF_FOLLOW_KEY = {};
 var IN_RULE_RECOVERY_EXCEPTION = "InRuleRecoveryException";
 var InRuleRecoveryException = class extends Error {
@@ -4810,7 +4810,7 @@ function attemptInRepetitionRecovery(prodFunc, args, lookaheadFunc, dslMethodIdx
   }
 }
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/keys.js
+// node_modules/chevrotain/lib/src/parse/grammar/keys.js
 var BITS_FOR_METHOD_TYPE = 4;
 var BITS_FOR_OCCURRENCE_IDX = 8;
 var BITS_FOR_ALT_IDX = 8;
@@ -4825,7 +4825,7 @@ function getKeyForAutomaticLookahead(ruleIdx, dslMethodIdx, occurrence) {
 }
 var BITS_START_FOR_ALT_IDX = 32 - BITS_FOR_ALT_IDX;
 
-// ../node_modules/chevrotain/lib/src/parse/grammar/llk_lookahead.js
+// node_modules/chevrotain/lib/src/parse/grammar/llk_lookahead.js
 var LLkLookaheadStrategy = class {
   constructor(options) {
     var _a;
@@ -4867,7 +4867,7 @@ var LLkLookaheadStrategy = class {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js
 var LooksAhead = class {
   initLooksAhead(config) {
     this.dynamicTokensEnabled = Object.hasOwn(config, "dynamicTokensEnabled") ? config.dynamicTokensEnabled : DEFAULT_PARSER_CONFIG.dynamicTokensEnabled;
@@ -4986,7 +4986,7 @@ function collectMethods(rule) {
   return dslMethods;
 }
 
-// ../node_modules/chevrotain/lib/src/parse/cst/cst.js
+// node_modules/chevrotain/lib/src/parse/cst/cst.js
 function setNodeLocationOnlyOffset(currNodeLocation, newLocationInfo) {
   if (isNaN(currNodeLocation.startOffset) === true) {
     currNodeLocation.startOffset = newLocationInfo.startOffset;
@@ -5024,7 +5024,7 @@ function addNoneTerminalToCst(node, ruleName, ruleResult) {
   }
 }
 
-// ../node_modules/chevrotain/lib/src/lang/lang_extensions.js
+// node_modules/chevrotain/lib/src/lang/lang_extensions.js
 var NAME = "name";
 function defineNameProp(obj, nameValue) {
   Object.defineProperty(obj, NAME, {
@@ -5035,7 +5035,7 @@ function defineNameProp(obj, nameValue) {
   });
 }
 
-// ../node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js
+// node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js
 function defaultVisit(ctx, param) {
   const childrenNames = Object.keys(ctx);
   const childrenNamesLength = childrenNames.length;
@@ -5114,7 +5114,7 @@ function validateMissingCstMethods(visitorInstance, ruleNames) {
   return errors.filter(Boolean);
 }
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js
 var TreeBuilder = class {
   initTreeBuilder(config) {
     this.CST_STACK = [];
@@ -5285,7 +5285,7 @@ var TreeBuilder = class {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js
 var LexerAdapter = class {
   initLexerAdapter() {
     this.tokVector = [];
@@ -5349,7 +5349,7 @@ var LexerAdapter = class {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js
 var RecognizerApi = class {
   ACTION(impl) {
     return impl.call(this);
@@ -5667,7 +5667,7 @@ var RecognizerApi = class {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js
 var RecognizerEngine = class {
   initRecognizerEngine(tokenVocabulary, config) {
     this.className = this.constructor.name;
@@ -6153,7 +6153,7 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js
 var ErrorHandler = class {
   initErrorHandler(config) {
     this._errors = [];
@@ -6217,7 +6217,7 @@ var ErrorHandler = class {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js
 var RECORDING_NULL_OBJECT = {
   description: "This Object indicates the Parser is during Recording Phase"
 };
@@ -6479,7 +6479,7 @@ function assertMethodIdxIsValid(idx) {
   }
 }
 
-// ../node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js
 var PerformanceTracer = class {
   initPerformanceTracer(config) {
     if (Object.hasOwn(config, "traceInitPerf")) {
@@ -6513,7 +6513,7 @@ var PerformanceTracer = class {
   }
 };
 
-// ../node_modules/chevrotain/lib/src/parse/parser/utils/apply_mixins.js
+// node_modules/chevrotain/lib/src/parse/parser/utils/apply_mixins.js
 function applyMixins(derivedCtor, baseCtors) {
   baseCtors.forEach((baseCtor) => {
     const baseProto = baseCtor.prototype;
@@ -6531,7 +6531,7 @@ function applyMixins(derivedCtor, baseCtors) {
   });
 }
 
-// ../node_modules/chevrotain/lib/src/parse/parser/parser.js
+// node_modules/chevrotain/lib/src/parse/parser/parser.js
 var END_OF_FILE = createTokenInstance(EOF, "", NaN, NaN, NaN, NaN, NaN, NaN);
 Object.freeze(END_OF_FILE);
 var DEFAULT_PARSER_CONFIG = Object.freeze({
@@ -6692,7 +6692,7 @@ var EmbeddedActionsParser = class extends Parser {
   }
 };
 
-// ../node_modules/@chevrotain/cst-dts-gen/lib/src/model.js
+// node_modules/@chevrotain/cst-dts-gen/lib/src/model.js
 function buildModel(productions) {
   const generator = new CstNodeDefinitionGenerator();
   const allRules = Object.values(productions);
@@ -6785,7 +6785,7 @@ function getType(production) {
   return { kind: "token" };
 }
 
-// ../node_modules/@chevrotain/cst-dts-gen/lib/src/generate.js
+// node_modules/@chevrotain/cst-dts-gen/lib/src/generate.js
 function genDts(model, options) {
   let contentParts = [];
   contentParts = contentParts.concat(`import type { CstNode, ICstVisitor, IToken } from "chevrotain";`);
@@ -6849,7 +6849,7 @@ function getNodeChildrenTypeName(ruleName) {
   return ruleName.charAt(0).toUpperCase() + ruleName.slice(1) + "CstChildren";
 }
 
-// ../node_modules/@chevrotain/cst-dts-gen/lib/src/api.js
+// node_modules/@chevrotain/cst-dts-gen/lib/src/api.js
 var defaultOptions = {
   includeVisitorInterface: true,
   visitorInterfaceName: "ICstNodeVisitor"
@@ -6860,7 +6860,7 @@ function generateCstDts(productions, options) {
   return genDts(model, effectiveOptions);
 }
 
-// ../node_modules/chevrotain/lib/src/diagrams/render_public.js
+// node_modules/chevrotain/lib/src/diagrams/render_public.js
 function createSyntaxDiagramsCode(grammar, { resourceBase = `https://unpkg.com/chevrotain@${VERSION}/diagrams/`, css = `https://unpkg.com/chevrotain@${VERSION}/diagrams/diagrams.css` } = {}) {
   const header = `
 <!-- This is a generated file -->
@@ -6899,7 +6899,7 @@ function createSyntaxDiagramsCode(grammar, { resourceBase = `https://unpkg.com/c
   return header + cssHtml + scripts + diagramsDiv + serializedGrammar + initLogic;
 }
 
-// ../node_modules/chevrotain/lib/src/api.js
+// node_modules/chevrotain/lib/src/api.js
 function clearCache() {
   console.warn("The clearCache function was 'soft' removed from the Chevrotain API.\n	 It performs no action other than printing this message.\n	 Please avoid using it as it will be completely removed in the future");
 }
