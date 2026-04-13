@@ -3,6 +3,8 @@ name: Squad Insider Release
 on:
   push:
     branches: [insider]
+    paths-ignore:
+      - 'docs/**'
 
 permissions:
   contents: write

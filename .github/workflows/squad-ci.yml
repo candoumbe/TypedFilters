@@ -4,8 +4,12 @@ on:
   pull_request:
     branches: [dev, preview, main, insider]
     types: [opened, synchronize, reopened]
+    paths-ignore:
+      - 'docs/**'
   push:
     branches: [dev, insider]
+    paths-ignore:
+      - 'docs/**'
 
 permissions:
   contents: read

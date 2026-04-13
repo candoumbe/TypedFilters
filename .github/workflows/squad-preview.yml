@@ -3,6 +3,8 @@ name: Squad Preview Validation
 on:
   push:
     branches: [preview]
+    paths-ignore:
+      - 'docs/**'
 
 permissions:
   contents: read
