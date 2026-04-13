@@ -17,11 +17,9 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint src/**/*.ts test/**/*.ts",
-    "test": "npm run test:matrix",
+    "test": "npm run test:node22",
     "test:cov": "jest --coverage",
-    "test:node20": "nve 20 node ./node_modules/jest/bin/jest.js",
     "test:node22": "nve 22 node ./node_modules/jest/bin/jest.js",
-    "test:matrix": "npm run test:node20 && npm run test:node22",
     "prepublishOnly": "npm run lint && npm run build && npm test"
   },
   "keywords": [
