@@ -1,0 +1,11 @@
+{
+  "name": "datafilters-typescript-docs",
+  "private": true,
+  "scripts": {
+    "build": "vitepress build .",
+    "dev": "vitepress dev ."
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  }
+}
