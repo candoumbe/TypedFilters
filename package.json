@@ -17,6 +17,10 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint src/**/*.ts test/**/*.ts",
+    "playground:install": "npm --prefix playground install",
+    "playground:prepare": "npm run build && npm run playground:install",
+    "playground:dev": "npm run playground:prepare && npm --prefix playground run dev",
+    "playground:build": "npm run build && npm --prefix playground run build",
     "test": "npm run test:node22",
     "test:cov": "jest --coverage",
     "test:node22": "nve 22 node ./node_modules/jest/bin/jest.js",

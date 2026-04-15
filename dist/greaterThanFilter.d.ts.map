@@ -1,0 +1,1 @@
+{"version":3,"file":"greaterThanFilter.d.ts","sourceRoot":"","sources":["../src/greaterThanFilter.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,WAAW,CAAC;AAEpC,gEAAgE;AAChE,qBAAa,iBAAkB,YAAW,OAAO;aACZ,KAAK,EAAE,MAAM;aAAkB,KAAK,EAAE,OAAO;gBAA7C,KAAK,EAAE,MAAM,EAAkB,KAAK,EAAE,OAAO;IAEzE,MAAM,IAAI,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC;CAGzC"}

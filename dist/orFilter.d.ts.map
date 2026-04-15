@@ -1,0 +1,1 @@
+{"version":3,"file":"orFilter.d.ts","sourceRoot":"","sources":["../src/orFilter.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,WAAW,CAAC;AAEpC,qBAAa,QAAS,YAAW,OAAO;aAEpB,IAAI,EAAE,OAAO;aACb,KAAK,EAAE,OAAO;gBADd,IAAI,EAAE,OAAO,EACb,KAAK,EAAE,OAAO;IAGzB,MAAM,IAAI,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC;CAGzC"}
