@@ -3,20 +3,26 @@
   "version": "0.1.0",
   "description": "Generate filter expressions compatible with the DataFilters C# library",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run build:esm",
+    "build:esm": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.mjs --sourcemap --packages=external",
     "lint": "eslint src/**/*.ts test/**/*.ts",
+    "playground:install": "npm --prefix playground install",
+    "playground:prepare": "npm run build && npm run playground:install",
+    "playground:dev": "npm run playground:prepare && npm --prefix playground run dev",
+    "playground:build": "npm run build && npm --prefix playground run build",
     "test": "npm run test:node22",
     "test:cov": "jest --coverage",
     "test:node22": "nve 22 node ./node_modules/jest/bin/jest.js",
