@@ -4,17 +4,17 @@ How to decide who handles what.
 
 ## Routing Table
 
-| Work Type                                      | Route To    | Examples                                              |
-| ---------------------------------------------- | ----------- | ----------------------------------------------------- |
+| Work Type                                      | Route To    | Examples                                                 |
+| ---------------------------------------------- | ----------- | -------------------------------------------------------- |
 | Architecture & scope                           | Neo         | Public library API, conventions, architectural decisions |
-| Frontend React                                 | Trinity     | Test playground, input/execution UX            |
-| TypeScript library & parser                    | Morpheus    | Parser, builder, serialization, exports               |
-| Code review                                    | Neo         | Review PRs, check quality, suggest improvements       |
-| Testing                                        | Switch      | Write tests, find edge cases, verify fixes            |
-| Documentation                                  | Tank        | Usage guide, filter expression examples              |
-| Scope & priorities                             | Neo         | What to build next, trade-offs, decisions             |
-| Async issue work (bugs, tests, small features) | @copilot 🤖 | Well-defined tasks matching capability profile        |
-| Session logging                                | Scribe      | Automatic — never needs routing                       |
+| Frontend React                                 | Trinity     | Test playground, input/execution UX                      |
+| TypeScript library & parser                    | Morpheus    | Parser, builder, serialization, exports                  |
+| Code review                                    | Neo         | Review PRs, check quality, suggest improvements          |
+| Testing                                        | Switch      | Write tests, find edge cases, verify fixes               |
+| Documentation                                  | Tank        | Usage guide, filter expression examples                  |
+| Scope & priorities                             | Neo         | What to build next, trade-offs, decisions                |
+| Async issue work (bugs, tests, small features) | @copilot 🤖 | Well-defined tasks matching capability profile           |
+| Session logging                                | Scribe      | Automatic — never needs routing                          |
 
 ## Issue Routing
 

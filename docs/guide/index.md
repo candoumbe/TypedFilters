@@ -9,7 +9,12 @@ npm install datafilters-typescript
 ## Usage
 
 ```typescript
-import { parse, toJson, FilterLogic, FilterOptions } from "datafilters-typescript";
+import {
+  parse,
+  toJson,
+  FilterLogic,
+  FilterOptions,
+} from "datafilters-typescript";
 
 // Parse a filter expression
 const options = new FilterOptions({ logic: FilterLogic.And });
@@ -49,6 +54,7 @@ The development server runs on `http://localhost:5173/`
 Parses a filter expression string and returns a filter object.
 
 **Example:**
+
 ```typescript
 const filter = parse("status=active|pending&country=FR");
 ```
@@ -58,6 +64,7 @@ const filter = parse("status=active|pending&country=FR");
 Serializes a filter object to JSON string.
 
 **Example:**
+
 ```typescript
 const json = toJson(filter, 2);
 console.log(json);
