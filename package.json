@@ -3,19 +3,21 @@
   "version": "0.1.0",
   "description": "Generate filter expressions compatible with the DataFilters C# library",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run build:esm",
+    "build:esm": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.mjs --sourcemap --packages=external",
     "lint": "eslint src/**/*.ts test/**/*.ts",
     "playground:install": "npm --prefix playground install",
     "playground:prepare": "npm run build && npm run playground:install",
