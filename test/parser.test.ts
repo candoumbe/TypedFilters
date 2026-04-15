@@ -343,6 +343,17 @@ describe("parse - errors", () => {
     // Arrange / Act / Assert
     expect(() => parse("noequals")).toThrow();
   });
+
+  it("should throw on invalid range syntax", () => {
+    // Arrange / Act / Assert
+    expect(() => parse("age=[18 TO 65")).toThrow();
+    expect(() => parse("age=18 TO 65]")).toThrow();
+    expect(() => parse("age=[18 65]")).toThrow();
+    expect(() => parse("age=[TO 65]")).toThrow();
+    expect(() => parse("age=[18 TO]")).toThrow();
+    expect(() => parse("age=[18 TO *]")).toThrow(/Parse error/);
+    expect(() => parse("age=[* TO 18]")).toThrow(/Parse error/);
+  });
 });
 
 describe("parse - parameterized", () => {

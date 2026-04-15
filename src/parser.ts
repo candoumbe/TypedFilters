@@ -251,21 +251,18 @@ class InternalFilterParser extends EmbeddedActionsParser {
   );
 
   /** Parses "fieldName = valueExpression" and records the result. */
-  private readonly fieldAssignment = this.RULE(
-    "fieldAssignment",
-    (): void => {
-      const field = this.SUBRULE(this.fieldNameRule);
-      this.CONSUME(Equals);
-      this.ACTION(() => {
-        this.currentField = field;
-        this.encounteredFields.add(field);
-      });
-      const filter = this.SUBRULE(this.valueExpression);
-      this.ACTION(() => {
-        this.parsedParts.push({ filter, field });
-      });
-    },
-  );
+  private readonly fieldAssignment = this.RULE("fieldAssignment", (): void => {
+    const field = this.SUBRULE(this.fieldNameRule);
+    this.CONSUME(Equals);
+    this.ACTION(() => {
+      this.currentField = field;
+      this.encounteredFields.add(field);
+    });
+    const filter = this.SUBRULE(this.valueExpression);
+    this.ACTION(() => {
+      this.parsedParts.push({ filter, field });
+    });
+  });
 
   /** Parses a value expression that inherits the field from the last assignment. */
   private readonly inheritedValuePart = this.RULE(
@@ -318,28 +315,25 @@ class InternalFilterParser extends EmbeddedActionsParser {
    * Pipe-separated alternatives: "a|b" produces OrFilter, "a|b|c" produces
    * OneOfFilter.
    */
-  private readonly pipeExpression = this.RULE(
-    "pipeExpression",
-    (): IFilter => {
-      const first = this.SUBRULE(this.negatedExpr);
-      const parts: IFilter[] = [first];
+  private readonly pipeExpression = this.RULE("pipeExpression", (): IFilter => {
+    const first = this.SUBRULE(this.negatedExpr);
+    const parts: IFilter[] = [first];
 
-      this.MANY(() => {
-        this.CONSUME(Pipe);
-        parts.push(this.SUBRULE2(this.negatedExpr));
-      });
+    this.MANY(() => {
+      this.CONSUME(Pipe);
+      parts.push(this.SUBRULE2(this.negatedExpr));
+    });
 
-      let result: IFilter;
-      if (parts.length === 1) {
-        result = parts[0];
-      } else if (parts.length === 2) {
-        result = new OrFilter(parts[0], parts[1]);
-      } else {
-        result = new OneOfFilter(parts);
-      }
-      return result;
-    },
-  );
+    let result: IFilter;
+    if (parts.length === 1) {
+      result = parts[0];
+    } else if (parts.length === 2) {
+      result = new OrFilter(parts[0], parts[1]);
+    } else {
+      result = new OneOfFilter(parts);
+    }
+    return result;
+  });
 
   /** Optional "!" negation prefix followed by a primary expression. */
   private readonly negatedExpr = this.RULE("negatedExpr", (): IFilter => {
@@ -486,6 +480,21 @@ class InternalFilterParser extends EmbeddedActionsParser {
 
       const result: IFilter = this.ACTION(() => {
         const filters: IFilter[] = [];
+
+        // Special '*' bounds must always match their unbounded delimiter form:
+        //   - lower bound: opening must be ']'
+        //   - upper bound: closing must be '['
+        if (minValue === undefined && openInclusive) {
+          throw new Error(
+            "Parse error: unbounded lower bound must use ']' opening delimiter",
+          );
+        }
+
+        if (maxValue === undefined && closeInclusive) {
+          throw new Error(
+            "Parse error: unbounded upper bound must use '[' closing delimiter",
+          );
+        }
 
         if (minValue !== undefined) {
           filters.push(
@@ -701,10 +710,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
    * Reset all per-call state, lex the expression, run the parser and return
    * the assembled IFilter.  Throws on lexer or parser errors.
    */
-  public parseExpression(
-    expression: string,
-    options?: FilterOptions,
-  ): IFilter {
+  public parseExpression(expression: string, options?: FilterOptions): IFilter {
     this.currentField = "";
     this.currentOptions = options;
     this.parsedParts = [];
