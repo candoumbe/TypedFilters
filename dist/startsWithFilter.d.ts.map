@@ -1,1 +1,0 @@
-{"version":3,"file":"startsWithFilter.d.ts","sourceRoot":"","sources":["../src/startsWithFilter.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,WAAW,CAAC;AAEpC,sEAAsE;AACtE,qBAAa,gBAAiB,YAAW,OAAO;aACX,KAAK,EAAE,MAAM;aAAkB,KAAK,EAAE,MAAM;gBAA5C,KAAK,EAAE,MAAM,EAAkB,KAAK,EAAE,MAAM;IAExE,MAAM,IAAI,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC;CAGzC"}

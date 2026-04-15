@@ -1,1 +1,0 @@
-{"version":3,"file":"endsWithFilter.d.ts","sourceRoot":"","sources":["../src/endsWithFilter.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,WAAW,CAAC;AAEpC,oEAAoE;AACpE,qBAAa,cAAe,YAAW,OAAO;aACT,KAAK,EAAE,MAAM;aAAkB,KAAK,EAAE,MAAM;gBAA5C,KAAK,EAAE,MAAM,EAAkB,KAAK,EAAE,MAAM;IAExE,MAAM,IAAI,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC;CAGzC"}
