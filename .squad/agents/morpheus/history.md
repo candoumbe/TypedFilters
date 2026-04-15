@@ -3,13 +3,15 @@
 - **Project:** DataFilters-typescript
 - **Created:** 2026-04-15
 - **Requested by:** Cyrille NDOUMBE
-- **Goal:** Créer une librairie TypeScript de parsing de filtres avec une interface React de test
+- **Goal:** Create a TypeScript library for parsing filter expressions with a React test interface
 - **Stack:** TypeScript, Jest
 
 ## Core Context
 
-Morpheus initialisé pour faire évoluer la librairie et son intégration.
+Morpheus initialized to evolve the library and its integration.
 
 ## Learnings
 
-- Le cœur du projet est déjà structuré sous src/ avec parser et filtres.
+- The project core is already structured under src/ with parser and filters.
+- Library must maintain backward compatibility.
+- Type definitions and public exports are critical for external consumption.

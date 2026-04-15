@@ -3,14 +3,15 @@
 - **Project:** DataFilters-typescript
 - **Created:** 2026-04-15
 - **Requested by:** Cyrille NDOUMBE
-- **Goal:** Créer une librairie TypeScript de parsing de filtres avec une interface React de test
+- **Goal:** Create a TypeScript library for parsing filter expressions with a React test interface
 - **Stack:** TypeScript, Jest, React
 
 ## Core Context
 
-Neo initialisé pour piloter l'architecture et les priorités.
+Neo initialized to drive architecture and priorities.
 
 ## Learnings
 
-- Le projet contient déjà le parser et les filtres de base.
-- Le besoin actuel ajoute un playground React pour tester les expressions.
+- The project already contains the parser and basic filters.
+- The current need adds a React playground to test expressions.
+- Public API must remain stable and clear across library updates.

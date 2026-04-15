@@ -26,4 +26,4 @@
 - **Created:** 2026-04-12
 - **Owner:** Cyrille NDOUMBE
 - **Stack:** TypeScript (library), React (playground UI)
-- **Goal:** Parser des expressions de filtres et les tester via une interface graphique simple
+- **Goal:** Parse filter expressions and test them via a simple graphical interface

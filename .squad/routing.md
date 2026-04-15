@@ -6,12 +6,12 @@ How to decide who handles what.
 
 | Work Type                                      | Route To    | Examples                                              |
 | ---------------------------------------------- | ----------- | ----------------------------------------------------- |
-| Architecture & scope                           | Neo         | API publique de la librairie, conventions, arbitrages |
-| Frontend React                                 | Trinity     | Playground de test, UX de saisie/execution            |
-| TypeScript library & parser                    | Morpheus    | Parser, builder, sérialisation, exports               |
+| Architecture & scope                           | Neo         | Public library API, conventions, architectural decisions |
+| Frontend React                                 | Trinity     | Test playground, input/execution UX            |
+| TypeScript library & parser                    | Morpheus    | Parser, builder, serialization, exports               |
 | Code review                                    | Neo         | Review PRs, check quality, suggest improvements       |
 | Testing                                        | Switch      | Write tests, find edge cases, verify fixes            |
-| Documentation                                  | Tank        | Guide d'utilisation, exemples de filtres              |
+| Documentation                                  | Tank        | Usage guide, filter expression examples              |
 | Scope & priorities                             | Neo         | What to build next, trade-offs, decisions             |
 | Async issue work (bugs, tests, small features) | @copilot 🤖 | Well-defined tasks matching capability profile        |
 | Session logging                                | Scribe      | Automatic — never needs routing                       |
@@ -20,7 +20,7 @@ How to decide who handles what.
 
 | Label           | Action                                                                      | Who          |
 | --------------- | --------------------------------------------------------------------------- | ------------ |
-| `squad`         | Triage: analyze issue, evaluate @copilot fit, assign `squad:{member}` label | Lead         |
+| `squad`         | Triage: analyze issue, evaluate @copilot fit, assign `squad:{member}` label | Lead (Neo)   |
 | `squad:{name}`  | Pick up issue and complete the work                                         | Named member |
 | `squad:copilot` | Assign to @copilot for autonomous work (if enabled)                         | @copilot 🤖  |
 
