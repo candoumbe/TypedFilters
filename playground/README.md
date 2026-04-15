@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# Playground DataFilters
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This React playground lets you visually test filter expressions from the DataFilters library.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 18+
+- npm 9+
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+From the repository root:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run playground:install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Run the playground (development mode)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Recommended option: from the root
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+This command builds the library, then starts Vite in the playground folder.
+
+```bash
+npm run playground:dev
 ```
+
+Then open your browser at the displayed URL (usually http://localhost:5173).
+
+### Direct option: from the playground folder
+
+If the library is already built:
+
+```bash
+cd playground
+npm run dev
+```
+
+## Build and preview
+
+### Full build from the root
+
+```bash
+npm run playground:build
+```
+
+### Preview the build from playground
+
+```bash
+cd playground
+npm run preview
+```
+
+## Useful commands (developer)
+
+From playground:
+
+```bash
+npm run typecheck
+npm run lint
+```
+
+## Quick troubleshooting
+
+- Port already in use: change the Vite port (example: `npm run dev -- --port 5174`).
+- `datafilters` package resolution error: make sure the library is built (`npm run build` at the root), since playground depends on `"datafilters": "file:.."`.
+- Missing dependencies in playground: run `npm run playground:install` again from the root.

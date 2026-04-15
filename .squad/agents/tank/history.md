@@ -15,3 +15,4 @@ Tank initialized to document the library and playground.
 - The docs/ folder exists and can host a playground guide.
 - Documentation should include API reference and usage examples.
 - Clear examples help adoption and reduce support queries.
+- The playground README should document both root-level scripts and direct playground commands to reduce setup friction.
