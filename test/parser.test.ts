@@ -9,6 +9,7 @@ import {
   LessThanFilter,
   LessThanOrEqualFilter,
   NotFilter,
+  OneOfFilter,
   OrFilter,
   StartsWithFilter,
 } from "../src/expressions";
@@ -873,6 +874,182 @@ describe("parse - bracket notation", () => {
       expect((f.filters[0] as EqualsFilter).value).toBe("Batman");
       expect((f.filters[1] as EqualsFilter).field).toBe("address.city");
       expect((f.filters[1] as EqualsFilter).value).toBe("Gotham");
+    });
+  });
+
+  describe("grouped expressions", () => {
+    it("should parse a single group as a simple filter", () => {
+      // Arrange
+      const expression = "name=(Batman)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EqualsFilter);
+      const f = result as EqualsFilter;
+      expect(f.field).toBe("name");
+      expect(f.value).toBe("Batman");
+    });
+
+    it("should parse a group with AND-ed expressions", () => {
+      // Arrange
+      const expression = "name=(Batman,Bruce)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(AndFilter);
+      const f = result as AndFilter;
+      expect(f.filters).toHaveLength(2);
+
+      const first = f.filters[0] as EqualsFilter;
+      expect(first).toBeInstanceOf(EqualsFilter);
+      expect(first.field).toBe("name");
+      expect(first.value).toBe("Batman");
+
+      const second = f.filters[1] as EqualsFilter;
+      expect(second).toBeInstanceOf(EqualsFilter);
+      expect(second.field).toBe("name");
+      expect(second.value).toBe("Bruce");
+    });
+
+    it("should parse two groups with OR", () => {
+      // Arrange
+      const expression = "name=(Batman)|(Superman)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OrFilter);
+      const f = result as OrFilter;
+
+      const left = f.left as EqualsFilter;
+      expect(left).toBeInstanceOf(EqualsFilter);
+      expect(left.field).toBe("name");
+      expect(left.value).toBe("Batman");
+
+      const right = f.right as EqualsFilter;
+      expect(right).toBeInstanceOf(EqualsFilter);
+      expect(right.field).toBe("name");
+      expect(right.value).toBe("Superman");
+    });
+
+    it("should parse complex group expression: (a,b)|(c,d)", () => {
+      // Arrange
+      const expression = "name=(Batman,Bruce)|(Superman,Clark)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OrFilter);
+      const f = result as OrFilter;
+
+      const left = f.left as AndFilter;
+      expect(left).toBeInstanceOf(AndFilter);
+      expect(left.filters).toHaveLength(2);
+      expect((left.filters[0] as EqualsFilter).value).toBe("Batman");
+      expect((left.filters[1] as EqualsFilter).value).toBe("Bruce");
+
+      const right = f.right as AndFilter;
+      expect(right).toBeInstanceOf(AndFilter);
+      expect(right.filters).toHaveLength(2);
+      expect((right.filters[0] as EqualsFilter).value).toBe("Superman");
+      expect((right.filters[1] as EqualsFilter).value).toBe("Clark");
+    });
+
+    it("should parse three groups with OR using OneOfFilter", () => {
+      // Arrange
+      const expression = "name=(a)|(b)|(c)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OneOfFilter);
+      const f = result as unknown as { filters: IFilter[] };
+      expect((f as any).filters).toHaveLength(3);
+    });
+
+    it("should support wildcard filters within groups", () => {
+      // Arrange
+      const expression = "name=(bat*,*man)|(super*)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OrFilter);
+      const f = result as OrFilter;
+
+      const left = f.left as AndFilter;
+      expect(left.filters[0]).toBeInstanceOf(StartsWithFilter);
+      expect(left.filters[1]).toBeInstanceOf(EndsWithFilter);
+
+      const right = f.right as StartsWithFilter;
+      expect(right).toBeInstanceOf(StartsWithFilter);
+    });
+
+    it("should support negation within groups", () => {
+      // Arrange
+      const expression = "name=(!Batman,Bruce)|(Superman)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OrFilter);
+      const f = result as OrFilter;
+
+      const left = f.left as AndFilter;
+      expect(left.filters[0]).toBeInstanceOf(NotFilter);
+      const notFilter = left.filters[0] as NotFilter;
+      expect(notFilter.filter).toBeInstanceOf(EqualsFilter);
+    });
+
+    it("should support multiple filters within groups", () => {
+      // Arrange
+      const expression = "name=(bat*,*man)|(super*,clark*)";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OrFilter);
+      const f = result as OrFilter;
+
+      const left = f.left as AndFilter;
+      expect(left.filters).toHaveLength(2);
+      expect(left.filters[0]).toBeInstanceOf(StartsWithFilter);
+      expect(left.filters[1]).toBeInstanceOf(EndsWithFilter);
+
+      const right = f.right as AndFilter;
+      expect(right.filters).toHaveLength(2);
+      expect(right.filters[0]).toBeInstanceOf(StartsWithFilter);
+      expect(right.filters[1]).toBeInstanceOf(StartsWithFilter);
+    });
+
+    it("should support groups mixed with non-grouped expressions", () => {
+      // Arrange
+      const expression = "name=(Batman,Bruce)|Superman";
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OrFilter);
+      const f = result as OrFilter;
+
+      const left = f.left as AndFilter;
+      expect(left).toBeInstanceOf(AndFilter);
+      expect(left.filters).toHaveLength(2);
+
+      const right = f.right as EqualsFilter;
+      expect(right).toBeInstanceOf(EqualsFilter);
+      expect(right.value).toBe("Superman");
     });
   });
 });
