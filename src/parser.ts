@@ -16,6 +16,8 @@
  *   - `field=]min TO max[`     → AndFilter(gt, lt)
  *   - `field=expr1,expr2`      → AndFilter (same field)
  *   - `field=expr1|expr2`      → OrFilter
+ *   - `field=[abc]`            → EqualsFilter (value = "[abc]")
+ *   - `field=[a-z]`            → EqualsFilter (value = "[a-z]")
  *   - `field1=v1&field2=v2`    → AndFilter or OrFilter based on options
  *   - `field["sub"]=value`                  → EqualsFilter (field = "field.sub")
  *   - `field["sub1"]["sub2-n"]=value`       → EqualsFilter (field = "field.sub1.sub2-n")
@@ -333,10 +335,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let result: IFilter;
       this.OR([
         {
-          GATE: () => {
-            const tt = this.LA(1).tokenType;
-            return tt === LeftSquare || tt === RightSquare;
-          },
+          GATE: () => this.isRangeLikeValueStart(),
           ALT: () => {
             result = this.SUBRULE(this.rangeExpression);
           },
@@ -428,6 +427,9 @@ class InternalFilterParser extends EmbeddedActionsParser {
       } else if (hasTrailingAsterisk) {
         filter = new StartsWithFilter(field, val);
       } else {
+        if (this.isMalformedTrailingRangeValue(val)) {
+          throw new Error("Parse error: malformed range expression");
+        }
         filter = new EqualsFilter(field, val);
       }
       return filter;
@@ -622,6 +624,16 @@ class InternalFilterParser extends EmbeddedActionsParser {
               text += this.CONSUME(TO).image;
             },
           },
+          {
+            ALT: () => {
+              text += this.CONSUME(LeftSquare).image;
+            },
+          },
+          {
+            ALT: () => {
+              text += this.CONSUME(RightSquare).image;
+            },
+          },
         ]);
       });
       return text;
@@ -679,6 +691,70 @@ class InternalFilterParser extends EmbeddedActionsParser {
     }
 
     return hasFieldToken && tt === Equals;
+  }
+
+  /**
+   * Decide whether a value that starts with '[' or ']' should be parsed as a
+   * range expression. This preserves historical failures for malformed ranges
+   * while allowing bracket-expression literals such as [abc] and [a-z].
+   */
+  private isRangeLikeValueStart(): boolean {
+    const first = this.LA(1).tokenType;
+
+    if (first === RightSquare) {
+      return true;
+    }
+
+    if (first !== LeftSquare) {
+      return false;
+    }
+
+    let i = 2;
+    let sawTO = false;
+    let sawClosingRightSquare = false;
+    let chunkCount = 0;
+
+    while (true) {
+      const tt = this.LA(i).tokenType;
+
+      if (tt === Text || tt === Escaped || tt === TO) {
+        chunkCount++;
+        if (tt === TO) {
+          sawTO = true;
+        }
+        i++;
+        continue;
+      }
+
+      if (tt === Asterisk) {
+        i++;
+        continue;
+      }
+
+      if (tt === RightSquare) {
+        sawClosingRightSquare = true;
+      }
+
+      break;
+    }
+
+    if (sawTO) {
+      return true;
+    }
+
+    if (!sawClosingRightSquare) {
+      return true;
+    }
+
+    return chunkCount !== 1;
+  }
+
+  /**
+   * Detect historical invalid syntax such as `18 TO 65]` which should not be
+   * treated as a plain equals literal.
+   */
+  private isMalformedTrailingRangeValue(value: string): boolean {
+    return /^[^\[\]]+TO[^\[\]]+[\]\[]$/.test(value);
   }
 
   // ---------------------------------------------------------------------------
