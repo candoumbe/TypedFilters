@@ -91,6 +91,112 @@ button:focus {
   outline-offset: 1px;
 }
 
+.syntax-guide {
+  margin-top: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(137, 108, 76, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 246, 0.92), rgba(249, 240, 230, 0.88));
+}
+
+.syntax-guide-header {
+  margin-bottom: 0.75rem;
+}
+
+.syntax-guide-copy {
+  margin: 0.22rem 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.syntax-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 0.55rem;
+}
+
+.syntax-item {
+  position: relative;
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+}
+
+.syntax-chip {
+  flex: 1;
+  display: grid;
+  gap: 0.28rem;
+  justify-items: start;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid rgba(137, 108, 76, 0.26);
+  padding: 0.7rem 0.8rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: #5e3a28;
+}
+
+.syntax-chip:hover {
+  box-shadow: 0 10px 20px rgba(132, 77, 33, 0.12);
+}
+
+.syntax-chip-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.syntax-chip code {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: #2b2620;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.tooltip-wrap {
+  position: relative;
+  flex: none;
+}
+
+.tooltip-trigger {
+  min-width: 2rem;
+  min-height: 2rem;
+  border-radius: 999px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(125, 75, 47, 0.12);
+  color: #7d4b2f;
+}
+
+.tooltip-bubble {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  width: min(280px, 70vw);
+  padding: 0.65rem 0.75rem;
+  border-radius: 12px;
+  background: #2f241c;
+  color: #fff7ef;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  box-shadow: 0 12px 28px rgba(31, 19, 8, 0.28);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+  z-index: 2;
+}
+
+.tooltip-wrap:hover .tooltip-bubble,
+.tooltip-wrap:focus-within .tooltip-bubble {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .toolbar {
   margin-top: 0.7rem;
   display: flex;
@@ -105,6 +211,11 @@ select {
   background: rgba(255, 255, 255, 0.86);
   color: #2b2620;
   padding: 0.45rem 0.6rem;
+}
+
+.toolbar-help {
+  color: var(--muted);
+  font-size: 0.8rem;
 }
 
 button {
@@ -204,5 +315,15 @@ pre {
 @media (max-width: 880px) {
   .results-grid {
     grid-template-columns: 1fr;
+  }
+
+  .syntax-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tooltip-bubble {
+    right: auto;
+    left: 0;
+    width: min(260px, calc(100vw - 4rem));
   }
 }
