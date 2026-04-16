@@ -96,6 +96,7 @@ function App() {
   const [resultJson, setResultJson] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [lastActionAt, setLastActionAt] = useState("");
+  const hasError = Boolean(errorMessage);
 
   const options = useMemo(() => new FilterOptions({ logic }), [logic]);
 
@@ -138,47 +139,59 @@ function App() {
           spellCheck={false}
         />
 
-        <section className="syntax-guide" aria-labelledby="syntax-guide-title">
-          <div className="syntax-guide-header">
-            <div>
-              <p id="syntax-guide-title" className="field-label compact">
-                Query syntax guide
-              </p>
-              <p className="syntax-guide-copy">
-                Click an example to load it into the editor. Hover or focus the
-                question mark to view the syntax rule behind it.
-              </p>
+        <details className="syntax-accordion">
+          <summary className="syntax-accordion-summary">
+            <span className="field-label compact">Query syntax guide</span>
+            <span className="syntax-accordion-meta">
+              {SYNTAX_HINTS.length} examples
+            </span>
+          </summary>
+
+          <section
+            className="syntax-guide"
+            aria-labelledby="syntax-guide-title"
+          >
+            <div className="syntax-guide-header">
+              <div>
+                <p id="syntax-guide-title" className="field-label compact">
+                  Query syntax guide
+                </p>
+                <p className="syntax-guide-copy">
+                  Click an example to load it into the editor. Hover or focus
+                  the question mark to view the syntax rule behind it.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="syntax-grid">
-            {SYNTAX_HINTS.map((hint) => (
-              <div key={hint.label} className="syntax-item">
-                <button
-                  type="button"
-                  className="syntax-chip"
-                  onClick={() => setExpression(hint.expression)}
-                >
-                  <span className="syntax-chip-label">{hint.label}</span>
-                  <code>{hint.expression}</code>
-                </button>
-
-                <span className="tooltip-wrap">
+            <div className="syntax-grid">
+              {SYNTAX_HINTS.map((hint) => (
+                <div key={hint.label} className="syntax-item">
                   <button
                     type="button"
-                    className="tooltip-trigger"
-                    aria-label={`Show help for ${hint.label}`}
+                    className="syntax-chip"
+                    onClick={() => setExpression(hint.expression)}
                   >
-                    ?
+                    <span className="syntax-chip-label">{hint.label}</span>
+                    <code>{hint.expression}</code>
                   </button>
-                  <span className="tooltip-bubble" role="tooltip">
-                    {hint.tooltip}
+
+                  <span className="tooltip-wrap">
+                    <button
+                      type="button"
+                      className="tooltip-trigger"
+                      aria-label={`Show help for ${hint.label}`}
+                    >
+                      ?
+                    </button>
+                    <span className="tooltip-bubble" role="tooltip">
+                      {hint.tooltip}
+                    </span>
                   </span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+                </div>
+              ))}
+            </div>
+          </section>
+        </details>
 
         <div className="toolbar">
           <label htmlFor="logic-select" className="field-label compact">
@@ -222,7 +235,10 @@ function App() {
         </p>
       </section>
 
-      <section className="results-grid" aria-live="polite">
+      <section
+        className={`results-grid ${hasError ? "error-visible" : "no-error"}`}
+        aria-live="polite"
+      >
         <article className="panel output-panel">
           <h2>Result JSON</h2>
           {resultJson ? (
@@ -232,14 +248,12 @@ function App() {
           )}
         </article>
 
-        <article className="panel error-panel">
-          <h2>Parse error</h2>
-          {errorMessage ? (
+        {hasError ? (
+          <article className="panel error-panel">
+            <h2>Parse error</h2>
             <pre>{errorMessage}</pre>
-          ) : (
-            <p className="empty">No error.</p>
-          )}
-        </article>
+          </article>
+        ) : null}
       </section>
     </main>
   );
