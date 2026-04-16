@@ -650,7 +650,7 @@ describe("parse - FilterOptions", () => {
 
 describe("parse - bracket notation", () => {
   describe("field path normalization", () => {
-    it('should parse single bracket segment as dot-notation field', () => {
+    it("should parse single bracket segment as dot-notation field", () => {
       // Arrange
       const expression = 'person["address"]=Gotham';
 
@@ -664,7 +664,7 @@ describe("parse - bracket notation", () => {
       expect(f.value).toBe("Gotham");
     });
 
-    it('should parse two bracket segments as nested dot-notation field', () => {
+    it("should parse two bracket segments as nested dot-notation field", () => {
       // Arrange
       const expression = 'person["address"]["city"]=Batman';
 
@@ -678,7 +678,7 @@ describe("parse - bracket notation", () => {
       expect(f.value).toBe("Batman");
     });
 
-    it('should parse three bracket segments as three-level dot-notation field', () => {
+    it("should parse three bracket segments as three-level dot-notation field", () => {
       // Arrange
       const expression = 'a["b"]["c"]["d"]=test';
 
@@ -692,7 +692,7 @@ describe("parse - bracket notation", () => {
       expect(f.value).toBe("test");
     });
 
-    it('should handle hyphenated sub-property names', () => {
+    it("should handle hyphenated sub-property names", () => {
       // Arrange
       const expression = 'data["my-prop"]=value';
 
@@ -705,7 +705,7 @@ describe("parse - bracket notation", () => {
       expect((result as EqualsFilter).value).toBe("value");
     });
 
-    it('should handle escaped double-quote inside bracket key', () => {
+    it("should handle escaped double-quote inside bracket key", () => {
       // Arrange – property name contains a literal double-quote character
       const expression = 'data["prop\\"quoted"]=value';
 
@@ -732,7 +732,7 @@ describe("parse - bracket notation", () => {
       expect((result as EqualsFilter).value).toBe("[a-z]");
     });
 
-    it('should support startsWith wildcard', () => {
+    it("should support startsWith wildcard", () => {
       // Arrange
       const expression = 'person["name"]=Bat*';
 
@@ -745,7 +745,7 @@ describe("parse - bracket notation", () => {
       expect((result as StartsWithFilter).value).toBe("Bat");
     });
 
-    it('should support endsWith wildcard', () => {
+    it("should support endsWith wildcard", () => {
       // Arrange
       const expression = 'person["name"]=*man';
 
@@ -758,7 +758,7 @@ describe("parse - bracket notation", () => {
       expect((result as EndsWithFilter).value).toBe("man");
     });
 
-    it('should support contains wildcard', () => {
+    it("should support contains wildcard", () => {
       // Arrange
       const expression = 'person["name"]=*man*';
 
@@ -771,7 +771,7 @@ describe("parse - bracket notation", () => {
       expect((result as ContainsFilter).value).toBe("man");
     });
 
-    it('should support negation', () => {
+    it("should support negation", () => {
       // Arrange
       const expression = 'person["name"]=!Batman';
 
@@ -786,7 +786,7 @@ describe("parse - bracket notation", () => {
       expect((inner as EqualsFilter).value).toBe("Batman");
     });
 
-    it('should support pipe (OR) expression', () => {
+    it("should support pipe (OR) expression", () => {
       // Arrange
       const expression = 'person["name"]=Batman|Bruce';
 
@@ -802,7 +802,7 @@ describe("parse - bracket notation", () => {
       expect((or.right as EqualsFilter).value).toBe("Bruce");
     });
 
-    it('should support closed range expression', () => {
+    it("should support closed range expression", () => {
       // Arrange
       const expression = 'person["age"]=[18 TO 65]';
 
@@ -813,14 +813,16 @@ describe("parse - bracket notation", () => {
       expect(result).toBeInstanceOf(AndFilter);
       const f = result as AndFilter;
       expect(f.filters[0]).toBeInstanceOf(GreaterThanOrEqualFilter);
-      expect((f.filters[0] as GreaterThanOrEqualFilter).field).toBe("person.age");
+      expect((f.filters[0] as GreaterThanOrEqualFilter).field).toBe(
+        "person.age",
+      );
       expect((f.filters[0] as GreaterThanOrEqualFilter).value).toBe("18");
       expect(f.filters[1]).toBeInstanceOf(LessThanOrEqualFilter);
       expect((f.filters[1] as LessThanOrEqualFilter).field).toBe("person.age");
       expect((f.filters[1] as LessThanOrEqualFilter).value).toBe("65");
     });
 
-    it('should support half-open range [min TO *[', () => {
+    it("should support half-open range [min TO *[", () => {
       // Arrange
       const expression = 'person["age"]=[18 TO *[';
 
@@ -835,7 +837,7 @@ describe("parse - bracket notation", () => {
   });
 
   describe("combining bracket notation fields with & (AND)", () => {
-    it('should combine two bracket-notation fields with & as AndFilter', () => {
+    it("should combine two bracket-notation fields with & as AndFilter", () => {
       // Arrange
       const expression = 'person["name"]=Batman&person["age"]=[18 TO *[';
 
@@ -858,7 +860,7 @@ describe("parse - bracket notation", () => {
       expect(ageFilter.value).toBe("18");
     });
 
-    it('should combine bracket-notation field with plain field using &', () => {
+    it("should combine bracket-notation field with plain field using &", () => {
       // Arrange
       const expression = 'name=Batman&address["city"]=Gotham';
 
