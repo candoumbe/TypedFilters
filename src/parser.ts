@@ -58,8 +58,8 @@ import { FilterLogic, FilterOptions } from "./filterOptions";
 /** Backslash followed by any character — the leading backslash is stripped at parse time. */
 const Escaped = createToken({ name: "Escaped", pattern: /\\[\s\S]/ });
 
-/** Any run of non-reserved characters. Excludes: \\ = , | ! * [ ] and whitespace. */
-const Text = createToken({ name: "Text", pattern: /[^\\=,|!*[\]\s]+/ });
+/** Any run of non-reserved characters. Excludes: \\ = , | ! * [ ] ( ) and whitespace. */
+const Text = createToken({ name: "Text", pattern: /[^\\=,|!*[\]()\\s]+/ });
 
 /** Range separator keyword. longer_alt ensures "TORONTO" stays a single Text token. */
 const TO = createToken({ name: "TO", pattern: /TO/, longer_alt: [Text] });
@@ -70,6 +70,8 @@ const Bang = createToken({ name: "Bang", pattern: /!/ });
 const Asterisk = createToken({ name: "Asterisk", pattern: /\*/ });
 const LeftSquare = createToken({ name: "LeftSquare", pattern: /\[/ });
 const RightSquare = createToken({ name: "RightSquare", pattern: /\]/ });
+const LeftParen = createToken({ name: "LeftParen", pattern: /\(/ });
+const RightParen = createToken({ name: "RightParen", pattern: /\)/ });
 const Equals = createToken({ name: "Equals", pattern: /=/ });
 
 /** Whitespace is silently skipped everywhere, including around TO in ranges. */
@@ -88,6 +90,8 @@ const ALL_TOKENS: TokenType[] = [
   Asterisk,
   LeftSquare,
   RightSquare,
+  LeftParen,
+  RightParen,
   Equals,
   Whitespace,
   Text,
