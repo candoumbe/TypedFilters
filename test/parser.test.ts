@@ -558,3 +558,220 @@ describe("parse - FilterOptions", () => {
     },
   );
 });
+
+describe("parse - bracket notation", () => {
+  describe("field path normalization", () => {
+    it('should parse single bracket segment as dot-notation field', () => {
+      // Arrange
+      const expression = 'person["address"]=Gotham';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EqualsFilter);
+      const f = result as EqualsFilter;
+      expect(f.field).toBe("person.address");
+      expect(f.value).toBe("Gotham");
+    });
+
+    it('should parse two bracket segments as nested dot-notation field', () => {
+      // Arrange
+      const expression = 'person["address"]["city"]=Batman';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EqualsFilter);
+      const f = result as EqualsFilter;
+      expect(f.field).toBe("person.address.city");
+      expect(f.value).toBe("Batman");
+    });
+
+    it('should parse three bracket segments as three-level dot-notation field', () => {
+      // Arrange
+      const expression = 'a["b"]["c"]["d"]=test';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EqualsFilter);
+      const f = result as EqualsFilter;
+      expect(f.field).toBe("a.b.c.d");
+      expect(f.value).toBe("test");
+    });
+
+    it('should handle hyphenated sub-property names', () => {
+      // Arrange
+      const expression = 'data["my-prop"]=value';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EqualsFilter);
+      expect((result as EqualsFilter).field).toBe("data.my-prop");
+      expect((result as EqualsFilter).value).toBe("value");
+    });
+
+    it('should handle escaped double-quote inside bracket key', () => {
+      // Arrange – property name contains a literal double-quote character
+      const expression = 'data["prop\\"quoted"]=value';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EqualsFilter);
+      expect((result as EqualsFilter).field).toBe('data.prop"quoted');
+    });
+  });
+
+  describe("value expressions with bracket notation fields", () => {
+    it('should support startsWith wildcard', () => {
+      // Arrange
+      const expression = 'person["name"]=Bat*';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(StartsWithFilter);
+      expect((result as StartsWithFilter).field).toBe("person.name");
+      expect((result as StartsWithFilter).value).toBe("Bat");
+    });
+
+    it('should support endsWith wildcard', () => {
+      // Arrange
+      const expression = 'person["name"]=*man';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EndsWithFilter);
+      expect((result as EndsWithFilter).field).toBe("person.name");
+      expect((result as EndsWithFilter).value).toBe("man");
+    });
+
+    it('should support contains wildcard', () => {
+      // Arrange
+      const expression = 'person["name"]=*man*';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(ContainsFilter);
+      expect((result as ContainsFilter).field).toBe("person.name");
+      expect((result as ContainsFilter).value).toBe("man");
+    });
+
+    it('should support negation', () => {
+      // Arrange
+      const expression = 'person["name"]=!Batman';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(NotFilter);
+      const inner = (result as NotFilter).filter;
+      expect(inner).toBeInstanceOf(EqualsFilter);
+      expect((inner as EqualsFilter).field).toBe("person.name");
+      expect((inner as EqualsFilter).value).toBe("Batman");
+    });
+
+    it('should support pipe (OR) expression', () => {
+      // Arrange
+      const expression = 'person["name"]=Batman|Bruce';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(OrFilter);
+      const or = result as OrFilter;
+      expect((or.left as EqualsFilter).field).toBe("person.name");
+      expect((or.left as EqualsFilter).value).toBe("Batman");
+      expect((or.right as EqualsFilter).field).toBe("person.name");
+      expect((or.right as EqualsFilter).value).toBe("Bruce");
+    });
+
+    it('should support closed range expression', () => {
+      // Arrange
+      const expression = 'person["age"]=[18 TO 65]';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(AndFilter);
+      const f = result as AndFilter;
+      expect(f.filters[0]).toBeInstanceOf(GreaterThanOrEqualFilter);
+      expect((f.filters[0] as GreaterThanOrEqualFilter).field).toBe("person.age");
+      expect((f.filters[0] as GreaterThanOrEqualFilter).value).toBe("18");
+      expect(f.filters[1]).toBeInstanceOf(LessThanOrEqualFilter);
+      expect((f.filters[1] as LessThanOrEqualFilter).field).toBe("person.age");
+      expect((f.filters[1] as LessThanOrEqualFilter).value).toBe("65");
+    });
+
+    it('should support half-open range [min TO *[', () => {
+      // Arrange
+      const expression = 'person["age"]=[18 TO *[';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(GreaterThanOrEqualFilter);
+      expect((result as GreaterThanOrEqualFilter).field).toBe("person.age");
+      expect((result as GreaterThanOrEqualFilter).value).toBe("18");
+    });
+  });
+
+  describe("combining bracket notation fields with & (AND)", () => {
+    it('should combine two bracket-notation fields with & as AndFilter', () => {
+      // Arrange
+      const expression = 'person["name"]=Batman&person["age"]=[18 TO *[';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(AndFilter);
+      const f = result as AndFilter;
+      expect(f.filters).toHaveLength(2);
+
+      const nameFilter = f.filters[0] as EqualsFilter;
+      expect(nameFilter).toBeInstanceOf(EqualsFilter);
+      expect(nameFilter.field).toBe("person.name");
+      expect(nameFilter.value).toBe("Batman");
+
+      const ageFilter = f.filters[1] as GreaterThanOrEqualFilter;
+      expect(ageFilter).toBeInstanceOf(GreaterThanOrEqualFilter);
+      expect(ageFilter.field).toBe("person.age");
+      expect(ageFilter.value).toBe("18");
+    });
+
+    it('should combine bracket-notation field with plain field using &', () => {
+      // Arrange
+      const expression = 'name=Batman&address["city"]=Gotham';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(AndFilter);
+      const f = result as AndFilter;
+      expect(f.filters).toHaveLength(2);
+
+      expect((f.filters[0] as EqualsFilter).field).toBe("name");
+      expect((f.filters[0] as EqualsFilter).value).toBe("Batman");
+      expect((f.filters[1] as EqualsFilter).field).toBe("address.city");
+      expect((f.filters[1] as EqualsFilter).value).toBe("Gotham");
+    });
+  });
+});
