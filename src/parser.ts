@@ -16,6 +16,9 @@
  *   - `field=]min TO max[`     → AndFilter(gt, lt)
  *   - `field=expr1,expr2`      → AndFilter (same field)
  *   - `field=expr1|expr2`      → OrFilter
+ *   - `field=(expr)`           → expr (grouping, single item)
+ *   - `field=(expr1,expr2)`    → AndFilter (same field, grouped)
+ *   - `field=(a,b)|(c,d)`      → OrFilter(AndFilter(a,b), AndFilter(c,d))
  *   - `field=[abc]`            → EqualsFilter (value = "[abc]")
  *   - `field=[a-z]`            → EqualsFilter (value = "[a-z]")
  *   - `field1=v1&field2=v2`    → AndFilter or OrFilter based on options
