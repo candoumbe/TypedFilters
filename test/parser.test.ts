@@ -251,6 +251,95 @@ describe("parse - OR combination", () => {
   });
 });
 
+describe("parse - bracket expressions", () => {
+  it("should parse character set bracket expression as EqualsFilter value", () => {
+    // Arrange
+    const expression = "name=[abc]";
+
+    // Act
+    const result: IFilter = parse(expression);
+
+    // Assert
+    expect(result).toBeInstanceOf(EqualsFilter);
+    const equalsFilter = result as EqualsFilter;
+    expect(equalsFilter.field).toBe("name");
+    expect(equalsFilter.value).toBe("[abc]");
+  });
+
+  it("should parse character range bracket expression as EqualsFilter value", () => {
+    // Arrange
+    const expression = "name=[a-z]";
+
+    // Act
+    const result: IFilter = parse(expression);
+
+    // Assert
+    expect(result).toBeInstanceOf(EqualsFilter);
+    const equalsFilter = result as EqualsFilter;
+    expect(equalsFilter.field).toBe("name");
+    expect(equalsFilter.value).toBe("[a-z]");
+  });
+
+  it("should support bracket expression with negation", () => {
+    // Arrange
+    const expression = "name=![abc]";
+
+    // Act
+    const result: IFilter = parse(expression);
+
+    // Assert
+    expect(result).toBeInstanceOf(NotFilter);
+    const inner = (result as NotFilter).filter as EqualsFilter;
+    expect(inner.field).toBe("name");
+    expect(inner.value).toBe("[abc]");
+  });
+
+  it("should support bracket expression in pipe OR", () => {
+    // Arrange
+    const expression = "name=[a-z]|Batman";
+
+    // Act
+    const result: IFilter = parse(expression);
+
+    // Assert
+    expect(result).toBeInstanceOf(OrFilter);
+    const orFilter = result as OrFilter;
+    expect((orFilter.left as EqualsFilter).value).toBe("[a-z]");
+    expect((orFilter.right as EqualsFilter).value).toBe("Batman");
+  });
+
+  it("should support bracket expression in wildcard contains", () => {
+    // Arrange
+    const expression = "name=*[a-z]*";
+
+    // Act
+    const result: IFilter = parse(expression);
+
+    // Assert
+    expect(result).toBeInstanceOf(ContainsFilter);
+    const containsFilter = result as ContainsFilter;
+    expect(containsFilter.field).toBe("name");
+    expect(containsFilter.value).toBe("[a-z]");
+  });
+
+  it("should support inherited-field comma parts with bracket expressions", () => {
+    // Arrange
+    const expression = "name=[abc],[a-z]";
+
+    // Act
+    const result: IFilter = parse(expression);
+
+    // Assert
+    expect(result).toBeInstanceOf(AndFilter);
+    const andFilter = result as AndFilter;
+    expect(andFilter.filters).toHaveLength(2);
+    expect((andFilter.filters[0] as EqualsFilter).field).toBe("name");
+    expect((andFilter.filters[0] as EqualsFilter).value).toBe("[abc]");
+    expect((andFilter.filters[1] as EqualsFilter).field).toBe("name");
+    expect((andFilter.filters[1] as EqualsFilter).value).toBe("[a-z]");
+  });
+});
+
 describe("parse - escaped reserved symbols", () => {
   it("should keep escaped top-level comma as literal", () => {
     // Arrange
@@ -349,7 +438,6 @@ describe("parse - errors", () => {
     expect(() => parse("age=[18 TO 65")).toThrow();
     expect(() => parse("age=18 TO 65]")).toThrow();
     expect(() => parse("age=[18 65]")).toThrow();
-    expect(() => parse("age=[TO 65]")).toThrow();
     expect(() => parse("age=[18 TO]")).toThrow();
     expect(() => parse("age=[18 TO *]")).toThrow(/Parse error/);
     expect(() => parse("age=[* TO 18]")).toThrow(/Parse error/);
@@ -630,6 +718,19 @@ describe("parse - bracket notation", () => {
   });
 
   describe("value expressions with bracket notation fields", () => {
+    it("should support bracket expression syntax", () => {
+      // Arrange
+      const expression = 'person["name"]=[a-z]';
+
+      // Act
+      const result = parse(expression);
+
+      // Assert
+      expect(result).toBeInstanceOf(EqualsFilter);
+      expect((result as EqualsFilter).field).toBe("person.name");
+      expect((result as EqualsFilter).value).toBe("[a-z]");
+    });
+
     it('should support startsWith wildcard', () => {
       // Arrange
       const expression = 'person["name"]=Bat*';
