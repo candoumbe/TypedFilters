@@ -17,6 +17,8 @@
  *   - `field=expr1,expr2`      → AndFilter (same field)
  *   - `field=expr1|expr2`      → OrFilter
  *   - `field1=v1&field2=v2`    → AndFilter or OrFilter based on options
+ *   - `field["sub"]=value`                  → EqualsFilter (field = "field.sub")
+ *   - `field["sub1"]["sub2-n"]=value`       → EqualsFilter (field = "field.sub1.sub2-n")
  */
 
 import {
@@ -118,6 +120,44 @@ function decodeQueryComponent(value: string): string {
 }
 
 /**
+ * Normalizes bracket notation in field names, converting sub-property
+ * access using `["key"]` segments into dot-separated paths.
+ *
+ * This transformation is applied BEFORE the Chevrotain lexer/parser so
+ * that the rest of the pipeline sees only plain identifier paths.
+ *
+ * @example
+ *   normalizeFieldBracketNotation('person["address"]["city"]=Batman')
+ *   // → 'person.address.city=Batman'
+ *
+ *   normalizeFieldBracketNotation('data["key-1"]["key-2"]=val,other["x"]=1')
+ *   // → 'data.key-1.key-2=val,other.x=1'
+ *
+ * Notes:
+ *   - Only double-quoted brackets are supported: `["key"]`
+ *   - The root property must be present (e.g. `root["sub"]`, not `["root"]`)
+ *   - Backslash escapes inside the quoted key are resolved: `\"` → `"`, `\\` → `\`
+ */
+function normalizeFieldBracketNotation(expression: string): string {
+  // Matches: <root-field-chars> followed by one or more ["..."] bracket
+  // segments, followed by a look-ahead `=`.
+  // Root chars: everything valid in a Text token (excludes \, =, ,, |, !, *, [, ], whitespace).
+  return expression.replace(
+    /([^\\=,|!*[\]\s]+)((?:\["(?:[^"\\]|\\.)*"\])+)(?==)/g,
+    (_match, root: string, brackets: string) => {
+      const subProps: string[] = [];
+      const bracketRe = /\["((?:[^"\\]|\\.)*)"\]/g;
+      let m: RegExpExecArray | null;
+      while ((m = bracketRe.exec(brackets)) !== null) {
+        // Resolve backslash escapes inside the quoted key.
+        subProps.push(m[1].replace(/\\([\s\S])/g, "$1"));
+      }
+      return `${root}.${subProps.join(".")}`;
+    },
+  );
+}
+
+/**
  * Split on unencoded ampersands first (so %26 inside values is preserved),
  * URL-decode each field=value segment independently, then rejoin with commas
  * so the Chevrotain grammar only needs a single separator token.
@@ -183,7 +223,7 @@ function normalizeExpression(expression: string): string {
     result = normalizedParts.join(",");
   }
 
-  return result;
+  return normalizeFieldBracketNotation(result);
 }
 
 // ===== Parser =====
