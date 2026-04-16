@@ -59,7 +59,7 @@ import { FilterLogic, FilterOptions } from "./filterOptions";
 const Escaped = createToken({ name: "Escaped", pattern: /\\[\s\S]/ });
 
 /** Any run of non-reserved characters. Excludes: \\ = , | ! * [ ] ( ) and whitespace. */
-const Text = createToken({ name: "Text", pattern: /[^\\=,|!*[\]()\\s]+/ });
+const Text = createToken({ name: "Text", pattern: /[^\\=,|!*\[\]()\s]+/ });
 
 /** Range separator keyword. longer_alt ensures "TORONTO" stays a single Text token. */
 const TO = createToken({ name: "TO", pattern: /TO/, longer_alt: [Text] });
@@ -356,15 +356,18 @@ class InternalFilterParser extends EmbeddedActionsParser {
 
   /**
    * Pipe-separated alternatives: "a|b" produces OrFilter, "a|b|c" produces
-   * OneOfFilter.
+   * OneOfFilter. Supports both simple expressions and grouped expressions:
+   * - Simple: "a|b|c"
+   * - Grouped: "(a,b)|(c,d)" where within a group, comma-separated exprs are AND-ed
+   * - Mixed: "(a,b)|c" is also valid
    */
   private readonly pipeExpression = this.RULE("pipeExpression", (): IFilter => {
-    const first = this.SUBRULE(this.negatedExpr);
+    const first = this.SUBRULE(this.pipeElement);
     const parts: IFilter[] = [first];
 
     this.MANY(() => {
       this.CONSUME(Pipe);
-      parts.push(this.SUBRULE2(this.negatedExpr));
+      parts.push(this.SUBRULE2(this.pipeElement));
     });
 
     let result: IFilter;
@@ -375,6 +378,53 @@ class InternalFilterParser extends EmbeddedActionsParser {
     } else {
       result = new OneOfFilter(parts);
     }
+    return result;
+  });
+
+  /**
+   * A single element in a pipe expression: either a grouped expression
+   * or a negated expression.
+   */
+  private readonly pipeElement = this.RULE("pipeElement", (): IFilter => {
+    let result: IFilter;
+    this.OR([
+      {
+        ALT: () => {
+          result = this.SUBRULE(this.groupedExpr);
+        },
+      },
+      {
+        ALT: () => {
+          result = this.SUBRULE(this.negatedExpr);
+        },
+      },
+    ]);
+    return result!;
+  });
+
+  /**
+   * Grouped expression: ( comma-separated negated expressions )
+   * Expressions within the group are AND-ed together.
+   */
+  private readonly groupedExpr = this.RULE("groupedExpr", (): IFilter => {
+    this.CONSUME(LeftParen);
+    const first = this.SUBRULE(this.negatedExpr);
+    const parts: IFilter[] = [first];
+
+    this.MANY(() => {
+      this.CONSUME(Comma);
+      parts.push(this.SUBRULE2(this.negatedExpr));
+    });
+
+    this.CONSUME(RightParen);
+
+    const result: IFilter = this.ACTION(() => {
+      if (parts.length === 1) {
+        return parts[0];
+      }
+      return new AndFilter(parts);
+    });
+
     return result;
   });
 
