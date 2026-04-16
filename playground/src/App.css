@@ -96,8 +96,11 @@ button:focus {
   padding: 0.9rem;
   border-radius: 14px;
   border: 1px solid rgba(137, 108, 76, 0.22);
-  background:
-    linear-gradient(180deg, rgba(255, 251, 246, 0.92), rgba(249, 240, 230, 0.88));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 251, 246, 0.92),
+    rgba(249, 240, 230, 0.88)
+  );
 }
 
 .syntax-guide-header {

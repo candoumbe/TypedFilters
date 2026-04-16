@@ -18,12 +18,14 @@ const SYNTAX_HINTS = [
   {
     label: "Contains",
     expression: "name=*bat*",
-    tooltip: "Wrap the value in *...* to match a substring anywhere in the field.",
+    tooltip:
+      "Wrap the value in *...* to match a substring anywhere in the field.",
   },
   {
     label: "Starts with",
     expression: "name=Bat*",
-    tooltip: "Add a trailing * to match values that start with the given prefix.",
+    tooltip:
+      "Add a trailing * to match values that start with the given prefix.",
   },
   {
     label: "Ends with",
@@ -58,7 +60,8 @@ const SYNTAX_HINTS = [
   {
     label: "Same field AND",
     expression: "name=*bat*,*man",
-    tooltip: "Separate expressions with a comma to chain constraints on the same field.",
+    tooltip:
+      "Separate expressions with a comma to chain constraints on the same field.",
   },
   {
     label: "Alternatives",
@@ -68,12 +71,14 @@ const SYNTAX_HINTS = [
   {
     label: "Multiple fields",
     expression: "country=FR&city=Paris",
-    tooltip: "Use & between different fields. The select below controls whether those fields are combined as and or or.",
+    tooltip:
+      "Use & between different fields. The select below controls whether those fields are combined as and or or.",
   },
   {
     label: "Escaped symbols",
     expression: "name=Bat\\*man",
-    tooltip: "Escape reserved characters like *, |, , and & with a backslash when they should stay literal.",
+    tooltip:
+      "Escape reserved characters like *, |, , and & with a backslash when they should stay literal.",
   },
 ] as const;
 
