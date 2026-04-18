@@ -972,8 +972,11 @@ describe("parse - bracket notation", () => {
 
       // Assert
       expect(result).toBeInstanceOf(OneOfFilter);
-      const f = result as unknown as { filters: IFilter[] };
-      expect((f as any).filters).toHaveLength(3);
+      const f = result as OneOfFilter;
+      expect(f.filters).toHaveLength(3);
+      expect((f.filters[0] as EqualsFilter).value).toBe("a");
+      expect((f.filters[1] as EqualsFilter).value).toBe("b");
+      expect((f.filters[2] as EqualsFilter).value).toBe("c");
     });
 
     it("should support wildcard filters within groups", () => {
