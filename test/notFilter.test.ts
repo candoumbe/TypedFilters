@@ -1,21 +1,21 @@
-import { EqualsFilter, NotFilter } from '../src/expressions';
+import { EqualsFilter, NotFilter } from "../src/expressions";
 
-describe('NotFilter', () => {
-  it('should serialize with logic not', () => {
+describe("NotFilter", () => {
+  it("should serialize with logic not", () => {
     // Arrange
-    const f = new NotFilter(new EqualsFilter('deleted', true));
+    const f = new NotFilter(new EqualsFilter("deleted", true));
 
     // Act
     const result = f.toDict();
 
     // Assert
-    expect(result['logic']).toBe('not');
-    expect((result['filters'] as unknown[]).length).toBe(1);
+    expect(result["logic"]).toBe("not");
+    expect((result["filters"] as unknown[]).length).toBe(1);
   });
 
-  it('should wrap the inner filter', () => {
+  it("should wrap the inner filter", () => {
     // Arrange
-    const inner = new EqualsFilter('active', false);
+    const inner = new EqualsFilter("active", false);
 
     // Act
     const f = new NotFilter(inner);
@@ -24,9 +24,9 @@ describe('NotFilter', () => {
     expect(f.filter).toBe(inner);
   });
 
-  it('should be equivalent to itself', () => {
+  it("should be equivalent to itself", () => {
     // Arrange
-    const f = new NotFilter(new EqualsFilter('deleted', true));
+    const f = new NotFilter(new EqualsFilter("deleted", true));
 
     // Act
     const result = f.isEquivalentTo(f);
@@ -35,10 +35,10 @@ describe('NotFilter', () => {
     expect(result).toBeTruthy();
   });
 
-  it('should be equivalent to another NotFilter with same filter', () => {
+  it("should be equivalent to another NotFilter with same filter", () => {
     // Arrange
-    const f1 = new NotFilter(new EqualsFilter('deleted', true));
-    const f2 = new NotFilter(new EqualsFilter('deleted', true));
+    const f1 = new NotFilter(new EqualsFilter("deleted", true));
+    const f2 = new NotFilter(new EqualsFilter("deleted", true));
 
     // Act
     const result = f1.isEquivalentTo(f2);
@@ -47,10 +47,10 @@ describe('NotFilter', () => {
     expect(result).toBeTruthy();
   });
 
-  it('should not be equivalent to a different NotFilter', () => {
+  it("should not be equivalent to a different NotFilter", () => {
     // Arrange
-    const f1 = new NotFilter(new EqualsFilter('deleted', true));
-    const f2 = new NotFilter(new EqualsFilter('deleted', false));
+    const f1 = new NotFilter(new EqualsFilter("deleted", true));
+    const f2 = new NotFilter(new EqualsFilter("deleted", false));
 
     // Act
     const result = f1.isEquivalentTo(f2);
