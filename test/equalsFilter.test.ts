@@ -85,8 +85,20 @@ describe("EqualsFilter", () => {
       const andToEquals = isEquivalentTo(andFilter, equalFilter);
 
       // Assert
-      expect(equalsToAnd).toBe(true);
-      expect(andToEquals).toBe(true);
+      expect(equalsToAnd).toBeTruthy();
+      expect(andToEquals).toBeTruthy();
+    });
+
+    it("should not be equivalent to a different EqualsFilter", () => {
+      // Arrange
+      const left = new EqualsFilter("name", "Batman");
+      const right = new EqualsFilter("name", "Superman");
+
+      // Act
+      const result = left.isEquivalentTo(right);
+
+      // Assert
+      expect(result).toBeFalsy();
     });
   });
 });

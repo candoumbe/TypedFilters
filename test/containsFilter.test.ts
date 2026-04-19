@@ -63,4 +63,39 @@ describe("ContainsFilter", () => {
       },
     );
   });
+
+  it("should be equivalent to itself", () => {
+    // Arrange
+    const f = new ContainsFilter("name", "bat");
+
+    // Act
+    const result = f.isEquivalentTo(f);
+
+    // Assert
+    expect(result).toBeTruthy();
+  });
+
+  it("should be equivalent to another ContainsFilter with same values", () => {
+    // Arrange
+    const f1 = new ContainsFilter("name", "bat");
+    const f2 = new ContainsFilter("name", "bat");
+
+    // Act
+    const result = f1.isEquivalentTo(f2);
+
+    // Assert
+    expect(result).toBeTruthy();
+  });
+
+  it("should not be equivalent to a different ContainsFilter", () => {
+    // Arrange
+    const f1 = new ContainsFilter("name", "bat");
+    const f2 = new ContainsFilter("name", "man");
+
+    // Act
+    const result = f1.isEquivalentTo(f2);
+
+    // Assert
+    expect(result).toBeFalsy();
+  });
 });

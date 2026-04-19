@@ -17,3 +17,4 @@ Switch initialized to secure evolution through tests.
 - Parser error scenarios are critical to validate.
 - Equivalence coverage should assert reflexivity and symmetry explicitly, including cross-shape equivalence like `EqualsFilter` vs `AndFilter([equalFilter, equalFilter])` in both directions.
 - Delivery note (2026-04-19): focused verification completed with `npm test -- test/equalsFilter.test.ts test/andFilter.test.ts --runInBand` passing.
+- Delivery note (2026-04-19): extended equivalence coverage pattern (self, same-shape equivalent, different-shape non-equivalent) across all concrete filter tests and added dedicated `OneOfFilter` test suite.
