@@ -1,4 +1,5 @@
 import { IFilter } from "./iFilter";
+import { areFiltersEquivalent } from "./equivalence";
 
 /** Matches records where a property contains a substring. */
 export class ContainsFilter implements IFilter {
@@ -9,6 +10,10 @@ export class ContainsFilter implements IFilter {
 
   public toDict(): Record<string, unknown> {
     return { field: this.field, op: "contains", value: this.value };
+  }
+
+  public isEquivalentTo(other: IFilter): boolean {
+    return areFiltersEquivalent(this, other);
   }
 
   /**

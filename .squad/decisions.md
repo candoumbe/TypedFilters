@@ -36,6 +36,27 @@
   - Decision: Use small iterative conventional commits while working on this feature.
   - Rationale: User directive captured for team continuity.
 
+- 2026-04-19T00:00:00Z | Filter equivalence contract and shared semantics
+  - By: Morpheus
+  - Decision: Add `isEquivalentTo(other: IFilter): boolean` to the `IFilter` contract and implement it for all concrete filters via a shared equivalence utility.
+  - Semantics:
+    - Reflexive and symmetric equivalence.
+    - Structural baseline uses deep equality on `toDict()` payloads.
+    - Bridge behavior: a filter is equivalent to an `AndFilter` when each `AndFilter` child is equivalent to that filter (and vice versa).
+  - Rationale:
+    - Enforces one equivalence path for all filter types.
+    - Preserves backward compatibility for existing parser/serialization APIs.
+    - Satisfies required `EqualsFilter` <-> `AndFilter([same, same])` behavior.
+
+- 2026-04-19T00:00:00Z | Branching policy for all squad work
+  - By: Cyrille NDOUMBE (via Copilot)
+  - Decision: Never commit directly to `develop`.
+  - Workflow:
+    - Follow gitflow for all team work.
+    - Create an appropriate branch before starting any implementation, test, documentation, or review-related change.
+    - Treat `develop` as an integration branch only.
+  - Rationale: User directive captured for team continuity and branch safety.
+
 ## Governance
 
 - All meaningful changes require team consensus

@@ -1,12 +1,12 @@
-import { EqualsFilter, OrFilter } from "../src/expressions";
+import { EqualsFilter, OneOfFilter } from "../src/expressions";
 
-describe("OrFilter", () => {
+describe("OneOfFilter", () => {
   it("should serialize with logic and nested filters", () => {
     // Arrange
-    const f = new OrFilter(
+    const f = new OneOfFilter([
       new EqualsFilter("status", "active"),
       new EqualsFilter("status", "pending"),
-    );
+    ]);
 
     // Act
     const result = f.toDict();
@@ -18,10 +18,10 @@ describe("OrFilter", () => {
 
   it("should be equivalent to itself", () => {
     // Arrange
-    const f = new OrFilter(
+    const f = new OneOfFilter([
       new EqualsFilter("status", "active"),
       new EqualsFilter("status", "pending"),
-    );
+    ]);
 
     // Act
     const result = f.isEquivalentTo(f);
@@ -30,16 +30,16 @@ describe("OrFilter", () => {
     expect(result).toBeTruthy();
   });
 
-  it("should be equivalent to another OrFilter with same filters", () => {
+  it("should be equivalent to another OneOfFilter with same filters", () => {
     // Arrange
-    const f1 = new OrFilter(
+    const f1 = new OneOfFilter([
       new EqualsFilter("status", "active"),
       new EqualsFilter("status", "pending"),
-    );
-    const f2 = new OrFilter(
+    ]);
+    const f2 = new OneOfFilter([
       new EqualsFilter("status", "active"),
       new EqualsFilter("status", "pending"),
-    );
+    ]);
 
     // Act
     const result = f1.isEquivalentTo(f2);
@@ -48,16 +48,16 @@ describe("OrFilter", () => {
     expect(result).toBeTruthy();
   });
 
-  it("should not be equivalent to a different OrFilter", () => {
+  it("should not be equivalent to a different OneOfFilter", () => {
     // Arrange
-    const f1 = new OrFilter(
+    const f1 = new OneOfFilter([
       new EqualsFilter("status", "active"),
       new EqualsFilter("status", "pending"),
-    );
-    const f2 = new OrFilter(
+    ]);
+    const f2 = new OneOfFilter([
       new EqualsFilter("status", "active"),
       new EqualsFilter("status", "disabled"),
-    );
+    ]);
 
     // Act
     const result = f1.isEquivalentTo(f2);
