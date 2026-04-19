@@ -48,6 +48,15 @@
     - Preserves backward compatibility for existing parser/serialization APIs.
     - Satisfies required `EqualsFilter` <-> `AndFilter([same, same])` behavior.
 
+- 2026-04-19T00:00:00Z | Branching policy for all squad work
+  - By: Cyrille NDOUMBE (via Copilot)
+  - Decision: Never commit directly to `develop`.
+  - Workflow:
+    - Follow gitflow for all team work.
+    - Create an appropriate branch before starting any implementation, test, documentation, or review-related change.
+    - Treat `develop` as an integration branch only.
+  - Rationale: User directive captured for team continuity and branch safety.
+
 ## Governance
 
 - All meaningful changes require team consensus
