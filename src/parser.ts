@@ -62,7 +62,7 @@ import { FilterLogic, FilterOptions } from "./filterOptions";
 const Escaped = createToken({ name: "Escaped", pattern: /\\[\s\S]/ });
 
 /** Any run of non-reserved characters. Excludes: \\ = , | ! * [ ] ( ) and whitespace. */
-const Text = createToken({ name: "Text", pattern: /[^\\=,|!*\[\]()\s]+/ });
+const Text = createToken({ name: "Text", pattern: /[^\\=,|!*[\]()\s]+/ });
 
 /** Range separator keyword. longer_alt ensures "TORONTO" stays a single Text token. */
 const TO = createToken({ name: "TO", pattern: /TO/, longer_alt: [Text] });
@@ -285,13 +285,13 @@ class InternalFilterParser extends EmbeddedActionsParser {
     (): void => {
       this.OR([
         {
-          GATE: () => this.isFieldAssignmentStart(),
-          ALT: () => {
+          GATE: (): boolean => this.isFieldAssignmentStart(),
+          ALT: (): void => {
             this.SUBRULE(this.fieldAssignment);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             this.SUBRULE(this.inheritedValuePart);
           },
         },
@@ -342,13 +342,13 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let result: IFilter;
       this.OR([
         {
-          GATE: () => this.isRangeLikeValueStart(),
-          ALT: () => {
+          GATE: (): boolean => this.isRangeLikeValueStart(),
+          ALT: (): void => {
             result = this.SUBRULE(this.rangeExpression);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             result = this.SUBRULE(this.pipeExpression);
           },
         },
@@ -392,12 +392,12 @@ class InternalFilterParser extends EmbeddedActionsParser {
     let result: IFilter;
     this.OR([
       {
-        ALT: () => {
+        ALT: (): void => {
           result = this.SUBRULE(this.groupedExpr);
         },
       },
       {
-        ALT: () => {
+        ALT: (): void => {
           result = this.SUBRULE(this.negatedExpr);
         },
       },
@@ -510,7 +510,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
 
       this.OR([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME(LeftSquare);
             this.ACTION(() => {
               openInclusive = true;
@@ -518,7 +518,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME(RightSquare);
             this.ACTION(() => {
               openInclusive = false;
@@ -530,12 +530,12 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let minValue: string | undefined;
       this.OR2([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME(Asterisk);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             minValue = this.SUBRULE(this.rangeValueChunks);
           },
         },
@@ -546,12 +546,12 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let maxValue: string | undefined;
       this.OR3([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME2(Asterisk);
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             maxValue = this.SUBRULE2(this.rangeValueChunks);
           },
         },
@@ -560,7 +560,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
       let closeInclusive = true;
       this.OR4([
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME2(RightSquare);
             this.ACTION(() => {
               closeInclusive = true;
@@ -568,7 +568,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             this.CONSUME2(LeftSquare);
             this.ACTION(() => {
               closeInclusive = false;
@@ -637,12 +637,12 @@ class InternalFilterParser extends EmbeddedActionsParser {
       this.AT_LEAST_ONE(() => {
         this.OR([
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Text));
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Escaped));
             },
           },
@@ -667,27 +667,27 @@ class InternalFilterParser extends EmbeddedActionsParser {
       this.AT_LEAST_ONE(() => {
         this.OR([
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Text));
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += tokenValue(this.CONSUME(Escaped));
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += this.CONSUME(TO).image;
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += this.CONSUME(LeftSquare).image;
             },
           },
           {
-            ALT: () => {
+            ALT: (): void => {
               text += this.CONSUME(RightSquare).image;
             },
           },
@@ -709,17 +709,17 @@ class InternalFilterParser extends EmbeddedActionsParser {
     this.AT_LEAST_ONE(() => {
       this.OR([
         {
-          ALT: () => {
+          ALT: (): void => {
             name += tokenValue(this.CONSUME(Text));
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             name += tokenValue(this.CONSUME(Escaped));
           },
         },
         {
-          ALT: () => {
+          ALT: (): void => {
             name += this.CONSUME(TO).image;
           },
         },
@@ -771,29 +771,27 @@ class InternalFilterParser extends EmbeddedActionsParser {
     let sawClosingRightSquare = false;
     let chunkCount = 0;
 
-    while (true) {
-      const tt = this.LA(i).tokenType;
+    let i_inner = i;
+    let done = false;
+    while (!done) {
+      const tt = this.LA(i_inner).tokenType;
 
       if (tt === Text || tt === Escaped || tt === TO) {
         chunkCount++;
         if (tt === TO) {
           sawTO = true;
         }
-        i++;
-        continue;
+        i_inner++;
+      } else if (tt === Asterisk) {
+        i_inner++;
+      } else {
+        if (tt === RightSquare) {
+          sawClosingRightSquare = true;
+        }
+        done = true;
       }
-
-      if (tt === Asterisk) {
-        i++;
-        continue;
-      }
-
-      if (tt === RightSquare) {
-        sawClosingRightSquare = true;
-      }
-
-      break;
     }
+    i = i_inner;
 
     if (sawTO) {
       return true;
@@ -811,7 +809,7 @@ class InternalFilterParser extends EmbeddedActionsParser {
    * treated as a plain equals literal.
    */
   private isMalformedTrailingRangeValue(value: string): boolean {
-    return /^[^\[\]]+TO[^\[\]]+[\]\[]$/.test(value);
+    return /^[^[\]]+TO[^[\]]+[\][]$/.test(value);
   }
 
   // ---------------------------------------------------------------------------
