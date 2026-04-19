@@ -1,31 +1,92 @@
-import { EqualsFilter } from '../src/expressions';
+import { AndFilter, EqualsFilter } from "../src/expressions";
 
-describe('EqualsFilter', () => {
-  it('should serialize to correct dict', () => {
+const isEquivalentTo = (left: unknown, right: unknown): boolean => {
+  return (
+    left as { isEquivalentTo: (other: unknown) => boolean }
+  ).isEquivalentTo(right);
+};
+
+describe("EqualsFilter", () => {
+  it("should serialize to correct dict", () => {
     // Arrange
-    const f = new EqualsFilter('name', 'Batman');
+    const f = new EqualsFilter("name", "Batman");
 
     // Act
     const result = f.toDict();
 
     // Assert
-    expect(result).toEqual({ field: 'name', op: 'eq', value: 'Batman' });
+    expect(result).toEqual({ field: "name", op: "eq", value: "Batman" });
   });
 
-  it('should store field and value', () => {
+  it("should store field and value", () => {
     // Arrange / Act
-    const f = new EqualsFilter('age', 30);
+    const f = new EqualsFilter("age", 30);
 
     // Assert
-    expect(f.field).toBe('age');
+    expect(f.field).toBe("age");
     expect(f.value).toBe(30);
   });
 
-  it('op field should be eq', () => {
+  it("op field should be eq", () => {
     // Arrange / Act
-    const dict = new EqualsFilter('f', 'v').toDict();
+    const dict = new EqualsFilter("f", "v").toDict();
 
     // Assert
-    expect(dict['op']).toBe('eq');
+    expect(dict["op"]).toBe("eq");
+  });
+
+  describe("isEquivalentTo", () => {
+    it("should be reflexive for EqualsFilter", () => {
+      // Arrange
+      const filter = new EqualsFilter("name", "Batman");
+
+      // Act
+      const result = isEquivalentTo(filter, filter);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it("should be reflexive for AndFilter", () => {
+      // Arrange
+      const filter = new AndFilter([
+        new EqualsFilter("name", "Batman"),
+        new EqualsFilter("city", "Gotham"),
+      ]);
+
+      // Act
+      const result = isEquivalentTo(filter, filter);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it("should be symmetric for equivalent EqualsFilter instances", () => {
+      // Arrange
+      const left = new EqualsFilter("name", "Batman");
+      const right = new EqualsFilter("name", "Batman");
+
+      // Act
+      const leftToRight = isEquivalentTo(left, right);
+      const rightToLeft = isEquivalentTo(right, left);
+
+      // Assert
+      expect(leftToRight).toBe(true);
+      expect(rightToLeft).toBe(true);
+    });
+
+    it("should treat EqualsFilter and AndFilter([equalFilter, equalFilter]) as equivalent in both directions", () => {
+      // Arrange
+      const equalFilter = new EqualsFilter("name", "Batman");
+      const andFilter = new AndFilter([equalFilter, equalFilter]);
+
+      // Act
+      const equalsToAnd = isEquivalentTo(equalFilter, andFilter);
+      const andToEquals = isEquivalentTo(andFilter, equalFilter);
+
+      // Assert
+      expect(equalsToAnd).toBe(true);
+      expect(andToEquals).toBe(true);
+    });
   });
 });
