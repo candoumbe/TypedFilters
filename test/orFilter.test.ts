@@ -65,4 +65,22 @@ describe("OrFilter", () => {
     // Assert
     expect(result).toBeFalsy();
   });
+
+  it("should be equivalent to another OrFilter with same filters in different order", () => {
+    // Arrange
+    const f1 = new OrFilter(
+      new EqualsFilter("status", "active"),
+      new EqualsFilter("status", "pending"),
+    );
+    const f2 = new OrFilter(
+      new EqualsFilter("status", "pending"),
+      new EqualsFilter("status", "active"),
+    );
+
+    // Act
+    const result = f1.isEquivalentTo(f2);
+
+    // Assert
+    expect(result).toBeTruthy();
+  });
 });
