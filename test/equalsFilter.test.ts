@@ -1,4 +1,4 @@
-import { AndFilter, EqualsFilter } from "../src/expressions";
+import { AndFilter, EqualsFilter, OrFilter } from "../src/expressions";
 
 const isEquivalentTo = (left: unknown, right: unknown): boolean => {
   return (
@@ -99,6 +99,21 @@ describe("EqualsFilter", () => {
 
       // Assert
       expect(result).toBeFalsy();
+    });
+
+    it("should be equivalent to an OrFilter if it only contains filters equivalent to this EqualsFilter", () => {
+      // Arrange
+      const f1 = new EqualsFilter("status", "active");
+      const f2 = new OrFilter(
+        new EqualsFilter("status", "active"),
+        new EqualsFilter("status", "active"),
+      );
+
+      // Act
+      const result = f1.isEquivalentTo(f2);
+
+      // Assert
+      expect(result).toBeTruthy();
     });
   });
 });

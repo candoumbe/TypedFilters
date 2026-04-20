@@ -83,4 +83,19 @@ describe("OrFilter", () => {
     // Assert
     expect(result).toBeTruthy();
   });
+
+  it("should be equivalent to an EqualsFilter if it only contains filters equivalent to that EqualsFilter", () => {
+    // Arrange
+    const f1 = new OrFilter(
+      new EqualsFilter("status", "active"),
+      new EqualsFilter("status", "active"),
+    );
+    const f2 = new EqualsFilter("status", "active");
+
+    // Act
+    const result = f1.isEquivalentTo(f2);
+
+    // Assert
+    expect(result).toBeTruthy();
+  });
 });
