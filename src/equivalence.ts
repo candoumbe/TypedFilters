@@ -1,6 +1,7 @@
 import { IFilter } from "./iFilter";
 
 type AndLikeFilter = IFilter & { filters: IFilter[] };
+type OrLikeFilter = IFilter & { left: IFilter; right: IFilter };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
@@ -56,6 +57,20 @@ const getAndFilters = (filter: IFilter): IFilter[] | undefined => {
   return andFilter.filters;
 };
 
+const getOrFilters = (filter: IFilter): IFilter[] | undefined => {
+  const dict = filter.toDict();
+  if (dict["logic"] !== "or") {
+    return undefined;
+  }
+
+  const orFilter = filter as Partial<OrLikeFilter>;
+  if (!isFilter(orFilter.left) || !isFilter(orFilter.right)) {
+    return undefined;
+  }
+
+  return [orFilter.left, orFilter.right];
+};
+
 export const areFiltersEquivalent = (
   left: IFilter,
   right: IFilter,
@@ -75,6 +90,16 @@ export const areFiltersEquivalent = (
 
   const rightAndFilters = getAndFilters(right);
   if (rightAndFilters?.every((child) => child.isEquivalentTo(left))) {
+    return true;
+  }
+
+  const leftOrFilters = getOrFilters(left);
+  if (leftOrFilters?.every((child) => child.isEquivalentTo(right))) {
+    return true;
+  }
+
+  const rightOrFilters = getOrFilters(right);
+  if (rightOrFilters?.every((child) => child.isEquivalentTo(left))) {
     return true;
   }
 
