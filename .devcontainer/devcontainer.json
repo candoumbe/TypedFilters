@@ -32,7 +32,7 @@
         "editor.fontFamily": "'Cascadia Code Font', 'Caskaydia Cove NF', 'Fira Code', Consolas, 'Courier New', monospace",
         "[typescript]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode",
-          "editor.fontFamily": "'CascadiaCodeNF'"
+          "editor.fontFamily": "'Cascadia Code Font', 'Caskaydia Cove NF', 'Fira Code', Consolas, 'Courier New', monospace"
         },
         "ts.preferences.importModuleSpecifier": "relative",
         "eslint.workingDirectories": ["src"],
@@ -43,5 +43,6 @@
     }
   },
   "postCreateCommand": "zsh ./.devcontainer/scripts/post-create.sh",
-  "postStartCommand": "zsh ./.devcontainer/scripts/post-start.sh"
+  "postStartCommand": "zsh ./.devcontainer/scripts/post-start.sh",
+  "runArgs": ["--env-file", "./.devcontainer/.env"]
 }

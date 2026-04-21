@@ -8,3 +8,5 @@
 node_modules/
 dist/
 .jest-cache/
+.squad/.first-run
+.devcontainer/.env
