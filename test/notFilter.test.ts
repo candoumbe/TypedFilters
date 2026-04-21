@@ -58,4 +58,16 @@ describe("NotFilter", () => {
     // Assert
     expect(result).toBeFalsy();
   });
+
+  it("should be equivalent to inner filter when wrapped with a pair of NotFilter", () => {
+    // Arrange
+    const inner = new EqualsFilter("active", false);
+    const f = new NotFilter(new NotFilter(inner));
+
+    // Act
+    const result = f.isEquivalentTo(inner);
+
+    // Assert
+    expect(result).toBeTruthy();
+  });
 });
