@@ -116,17 +116,17 @@ export const areFiltersEquivalent = (
 };
 
 const getNotFilter = (filter: IFilter): IFilter | undefined => {
+  let result: IFilter | undefined = undefined;
+
   const dict = filter.toDict();
-  if (dict["logic"] !== "not") {
-    return undefined;
+  if (dict["logic"] === "not") {
+    const notFilter = filter as Partial<NotLikeFilter>;
+    if (isFilter(notFilter.filter)) {
+      result = notFilter.filter;
+    }
   }
 
-  const notFilter = filter as Partial<NotLikeFilter>;
-  if (!isFilter(notFilter.filter)) {
-    return undefined;
-  }
-
-  return notFilter.filter;
+  return result;
 };
 
 /**
@@ -138,24 +138,16 @@ const getNotFilter = (filter: IFilter): IFilter | undefined => {
  * - x returns x
  */
 const unwrapDoubleNotFilters = (filter: IFilter): IFilter => {
-  let current = filter;
-  let notCount = 0;
+  const inner = getNotFilter(filter);
+  let result = filter;
 
-  // Count consecutive NOT filters
-  while (true) {
-    const inner = getNotFilter(current);
-    if (inner === undefined) {
-      break;
+  if (inner !== undefined) {
+    const innerUnwrapped = getNotFilter(inner);
+    if (innerUnwrapped !== undefined) {
+      // We have at least 2 consecutive NOTs, recurse on the unwrapped inner filter
+      result = unwrapDoubleNotFilters(innerUnwrapped);
     }
-    current = inner;
-    notCount++;
   }
 
-  // If even number of NOTs, return the unwrapped filter
-  if (notCount % 2 === 0) {
-    return current;
-  }
-
-  // If odd number of NOTs, return the original filter
-  return filter;
+  return result;
 };
