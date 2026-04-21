@@ -2,6 +2,7 @@ import { IFilter } from "./iFilter";
 
 type AndLikeFilter = IFilter & { filters: IFilter[] };
 type OrLikeFilter = IFilter & { left: IFilter; right: IFilter };
+type NotLikeFilter = IFilter & { filter: IFilter };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
@@ -103,5 +104,58 @@ export const areFiltersEquivalent = (
     return true;
   }
 
+  // Handle pairs of NOT filters: NOT(NOT(x)) = x
+  const leftUnwrapped = unwrapDoubleNotFilters(left);
+  const rightUnwrapped = unwrapDoubleNotFilters(right);
+
+  if (leftUnwrapped !== left || rightUnwrapped !== right) {
+    return areFiltersEquivalent(leftUnwrapped, rightUnwrapped);
+  }
+
   return false;
+};
+
+const getNotFilter = (filter: IFilter): IFilter | undefined => {
+  const dict = filter.toDict();
+  if (dict["logic"] !== "not") {
+    return undefined;
+  }
+
+  const notFilter = filter as Partial<NotLikeFilter>;
+  if (!isFilter(notFilter.filter)) {
+    return undefined;
+  }
+
+  return notFilter.filter;
+};
+
+/**
+ * Unwraps pairs of NotFilter.
+ * Since NOT(NOT(x)) = x, this function removes pairs of NOT operations.
+ * For example:
+ * - NOT(NOT(x)) returns x
+ * - NOT(NOT(NOT(x))) returns NOT(x)
+ * - x returns x
+ */
+const unwrapDoubleNotFilters = (filter: IFilter): IFilter => {
+  let current = filter;
+  let notCount = 0;
+
+  // Count consecutive NOT filters
+  while (true) {
+    const inner = getNotFilter(current);
+    if (inner === undefined) {
+      break;
+    }
+    current = inner;
+    notCount++;
+  }
+
+  // If even number of NOTs, return the unwrapped filter
+  if (notCount % 2 === 0) {
+    return current;
+  }
+
+  // If odd number of NOTs, return the original filter
+  return filter;
 };
