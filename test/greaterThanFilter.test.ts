@@ -54,4 +54,22 @@ describe("GreaterThanFilter", () => {
     // Assert
     expect(result).toBeFalsy();
   });
+
+  describe("complexity", () => {
+    it("should be 1", () => {
+      // Arrange
+      const f = new GreaterThanFilter("age", 18);
+
+      // Act / Assert
+      expect(f.complexity).toBe(5);
+    });
+
+    it("should never be 0", () => {
+      // Arrange
+      const f = new GreaterThanFilter("age", 18);
+
+      // Act / Assert
+      expect(f.complexity).toBeGreaterThan(0);
+    });
+  });
 });

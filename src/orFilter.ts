@@ -35,4 +35,8 @@ export class OrFilter implements IFilter {
 
     return areFiltersEquivalent(this, other);
   }
+
+  public get complexity(): number {
+    return (this.left.complexity + this.right.complexity) * 100 + 11;
+  }
 }

@@ -13,4 +13,8 @@ export class OneOfFilter implements IFilter {
   public isEquivalentTo(other: IFilter): boolean {
     return areFiltersEquivalent(this, other);
   }
+
+  public get complexity(): number {
+    return this.filters.reduce((sum, f) => sum + f.complexity, 0) * 100 + 12;
+  }
 }

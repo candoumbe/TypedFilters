@@ -16,6 +16,10 @@ export class ContainsFilter implements IFilter {
     return areFiltersEquivalent(this, other);
   }
 
+  public get complexity(): number {
+    return 2;
+  }
+
   /**
    * Creates a ContainsFilter from a dictionary.
    * @param dict The dictionary to create the filter from. Must have "field", "op", and "value" keys.

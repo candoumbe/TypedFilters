@@ -1,4 +1,17 @@
-import { AndFilter, EqualsFilter, OrFilter } from "../src/expressions";
+import {
+  AndFilter,
+  ContainsFilter,
+  EndsWithFilter,
+  EqualsFilter,
+  GreaterThanFilter,
+  GreaterThanOrEqualFilter,
+  LessThanFilter,
+  LessThanOrEqualFilter,
+  NotFilter,
+  OneOfFilter,
+  OrFilter,
+  StartsWithFilter,
+} from "../src/expressions";
 
 const isEquivalentTo = (left: unknown, right: unknown): boolean => {
   return (
@@ -114,6 +127,57 @@ describe("EqualsFilter", () => {
 
       // Assert
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe("complexity", () => {
+    it("should be 1", () => {
+      // Arrange
+      const f = new EqualsFilter("name", "Batman");
+
+      // Act / Assert
+      expect(f.complexity).toBe(1);
+    });
+
+    it("should never be 0", () => {
+      // Arrange
+      const f = new EqualsFilter("name", "Batman");
+
+      // Act / Assert
+      expect(f.complexity).toBeGreaterThan(0);
+    });
+
+    it("should be different for each filter type", () => {
+      // Arrange
+      const complexities = [
+        new EqualsFilter("name", "Batman").complexity,
+        new ContainsFilter("name", "bat").complexity,
+        new StartsWithFilter("name", "Bat").complexity,
+        new EndsWithFilter("name", "man").complexity,
+        new GreaterThanFilter("age", 18).complexity,
+        new GreaterThanOrEqualFilter("age", 18).complexity,
+        new LessThanFilter("age", 65).complexity,
+        new LessThanOrEqualFilter("age", 65).complexity,
+        new NotFilter(new EqualsFilter("active", true)).complexity,
+        new OneOfFilter([
+          new EqualsFilter("status", "active"),
+          new EqualsFilter("status", "pending"),
+        ]).complexity,
+        new AndFilter([
+          new EqualsFilter("city", "Gotham"),
+          new EqualsFilter("name", "Batman"),
+        ]).complexity,
+        new OrFilter(
+          new EqualsFilter("status", "active"),
+          new EqualsFilter("status", "pending"),
+        ).complexity,
+      ];
+
+      // Act
+      const distinctComplexities = new Set(complexities);
+
+      // Assert
+      expect(distinctComplexities.size).toBe(complexities.length);
     });
   });
 });

@@ -70,4 +70,30 @@ describe("NotFilter", () => {
     // Assert
     expect(result).toBeTruthy();
   });
+
+  describe("complexity", () => {
+    it("should encode NotFilter type when wrapping an EqualsFilter", () => {
+      // Arrange
+      const f = new NotFilter(new EqualsFilter("deleted", true));
+
+      // Act / Assert
+      expect(f.complexity).toBe(109);
+    });
+
+    it("should keep NotFilter type encoding on nested NotFilter", () => {
+      // Arrange
+      const f = new NotFilter(new NotFilter(new EqualsFilter("deleted", true)));
+
+      // Act / Assert
+      expect(f.complexity).toBe(10909);
+    });
+
+    it("should never be 0", () => {
+      // Arrange
+      const f = new NotFilter(new EqualsFilter("deleted", true));
+
+      // Act / Assert
+      expect(f.complexity).toBeGreaterThan(0);
+    });
+  });
 });

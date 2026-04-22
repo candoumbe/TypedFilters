@@ -23,3 +23,4 @@ Morpheus initialized to evolve the library and its integration.
 - Preserving historical parse failures requires explicit handling of malformed range-shaped literals (e.g. `18 TO 65]`) so they are not silently parsed as equals.
 - Equivalence semantics are safest when centralized in a shared utility and exposed through `IFilter.isEquivalentTo`, keeping reflexive/symmetric behavior consistent across all filter classes.
 - Delivery note (2026-04-19): implementation completed and validated with focused suites on `equals` and `and` filters.
+- Complexity property (2026-04-22): added `readonly complexity: number` to `IFilter`; leaf filters return 1, `OneOfFilter` returns `Math.max(1, filters.length)`, `NotFilter` returns `1 + inner.complexity`, `AndFilter` returns `Math.max(1, sum)`, `OrFilter` returns `left.complexity + right.complexity`. TypeScript validated with `--noEmit`.

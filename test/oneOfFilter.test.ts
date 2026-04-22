@@ -65,4 +65,37 @@ describe("OneOfFilter", () => {
     // Assert
     expect(result).toBeFalsy();
   });
+
+  describe("complexity", () => {
+    it("should encode OneOfFilter type and include children complexities", () => {
+      // Arrange
+      const f = new OneOfFilter([
+        new EqualsFilter("status", "active"),
+        new EqualsFilter("status", "pending"),
+        new EqualsFilter("status", "disabled"),
+      ]);
+
+      // Act / Assert
+      expect(f.complexity).toBe(312);
+    });
+
+    it("should be at least 1", () => {
+      // Arrange
+      const f = new OneOfFilter([new EqualsFilter("status", "active")]);
+
+      // Act / Assert
+      expect(f.complexity).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should never be 0", () => {
+      // Arrange
+      const f = new OneOfFilter([
+        new EqualsFilter("status", "active"),
+        new EqualsFilter("status", "pending"),
+      ]);
+
+      // Act / Assert
+      expect(f.complexity).toBeGreaterThan(0);
+    });
+  });
 });

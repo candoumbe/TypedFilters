@@ -98,4 +98,28 @@ describe("OrFilter", () => {
     // Assert
     expect(result).toBeTruthy();
   });
+
+  describe("complexity", () => {
+    it("should encode OrFilter type with 2 EqualsFilters", () => {
+      // Arrange
+      const f = new OrFilter(
+        new EqualsFilter("status", "active"),
+        new EqualsFilter("status", "pending"),
+      );
+
+      // Act / Assert
+      expect(f.complexity).toBe(211);
+    });
+
+    it("should never be 0", () => {
+      // Arrange
+      const f = new OrFilter(
+        new EqualsFilter("status", "active"),
+        new EqualsFilter("status", "pending"),
+      );
+
+      // Act / Assert
+      expect(f.complexity).toBeGreaterThan(0);
+    });
+  });
 });
