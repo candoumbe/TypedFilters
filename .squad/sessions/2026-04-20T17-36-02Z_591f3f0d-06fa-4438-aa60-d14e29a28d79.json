@@ -1,0 +1,17 @@
+{
+  "id": "591f3f0d-06fa-4438-aa60-d14e29a28d79",
+  "createdAt": "2026-04-20T17:35:25.555Z",
+  "lastActiveAt": "2026-04-20T17:36:21.835Z",
+  "messages": [
+    {
+      "role": "system",
+      "content": "❌ Something went wrong processing your message.\n   Try:\n   • Try your message again\n   • Run 'squad doctor' for diagnostics\n   • Check your internet connection",
+      "timestamp": "2026-04-20T17:36:02.232Z"
+    },
+    {
+      "role": "system",
+      "content": "❌ Something went wrong processing your message.\n   Try:\n   • Try your message again\n   • Run 'squad doctor' for diagnostics\n   • Check your internet connection",
+      "timestamp": "2026-04-20T17:36:17.917Z"
+    }
+  ]
+}

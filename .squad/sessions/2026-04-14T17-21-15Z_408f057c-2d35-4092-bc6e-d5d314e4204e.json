@@ -1,0 +1,17 @@
+{
+  "id": "408f057c-2d35-4092-bc6e-d5d314e4204e",
+  "createdAt": "2026-04-14T17:21:06.765Z",
+  "lastActiveAt": "2026-04-14T17:21:47.491Z",
+  "messages": [
+    {
+      "role": "system",
+      "content": "🏗️ No team yet — casting one based on your project...",
+      "timestamp": "2026-04-14T17:21:33.140Z"
+    },
+    {
+      "role": "system",
+      "content": "⚠ Team casting failed: Authorization error, you may need to run /login (Request ID: 6E09:3E658B:11F15F1:137BBF6:69DE7757)\nTry again or edit .squad/team.md directly.",
+      "timestamp": "2026-04-14T17:21:34.254Z"
+    }
+  ]
+}
