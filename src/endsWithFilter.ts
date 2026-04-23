@@ -15,4 +15,8 @@ export class EndsWithFilter implements IFilter {
   public isEquivalentTo(other: IFilter): boolean {
     return areFiltersEquivalent(this, other);
   }
+
+  public get complexity(): number {
+    return 4;
+  }
 }

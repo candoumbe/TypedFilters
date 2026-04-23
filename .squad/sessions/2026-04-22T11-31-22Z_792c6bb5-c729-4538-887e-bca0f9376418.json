@@ -1,7 +1,7 @@
 {
   "id": "792c6bb5-c729-4538-887e-bca0f9376418",
   "createdAt": "2026-04-22T11:30:49.699Z",
-  "lastActiveAt": "2026-04-22T11:55:18.603Z",
+  "lastActiveAt": "2026-04-22T20:03:53.204Z",
   "messages": [
     {
       "role": "system",
@@ -22,6 +22,21 @@
       "role": "system",
       "content": "❌ Something went wrong processing your message.\n   Try:\n   • Try your message again\n   • Run 'squad doctor' for diagnostics\n   • Check your internet connection",
       "timestamp": "2026-04-22T11:55:18.603Z"
+    },
+    {
+      "role": "system",
+      "content": "❌ Something went wrong processing your message.\n   Try:\n   • Try your message again\n   • Run 'squad doctor' for diagnostics\n   • Check your internet connection",
+      "timestamp": "2026-04-22T19:13:54.120Z"
+    },
+    {
+      "role": "system",
+      "content": "❌ Something went wrong processing your message.\n   Try:\n   • Try your message again\n   • Run 'squad doctor' for diagnostics\n   • Check your internet connection",
+      "timestamp": "2026-04-22T19:14:08.703Z"
+    },
+    {
+      "role": "system",
+      "content": "Operation cancelled.",
+      "timestamp": "2026-04-22T19:18:17.552Z"
     }
   ]
 }

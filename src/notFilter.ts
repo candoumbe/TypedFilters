@@ -12,4 +12,8 @@ export class NotFilter implements IFilter {
   public isEquivalentTo(other: IFilter): boolean {
     return areFiltersEquivalent(this, other);
   }
+
+  public get complexity(): number {
+    return this.filter.complexity * 100 + 9;
+  }
 }
