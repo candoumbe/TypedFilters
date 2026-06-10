@@ -11,6 +11,7 @@ import {
   NotFilter,
   OrFilter,
   StartsWithFilter,
+  OneOfFilter,
 } from "../src/expressions";
 import { parse } from "../src/parser";
 import { FilterLogic, FilterOptions } from "../src/filterOptions";
@@ -534,11 +535,60 @@ describe("parse - FilterOptions", () => {
         expect(right.value).toBe("30");
       },
     ],
+    [
+      "name=bat*,*man*&age=30&city=gotham|bludheaven",
+      new FilterOptions({ logic: FilterLogic.Or }),
+      (result: IFilter): void => {
+        expect(result).toBeInstanceOf(OneOfFilter);
+        const oneOfFilter = result as OneOfFilter;
+
+        expect(oneOfFilter.filters.length).toBe(3);
+
+        expect(oneOfFilter.filters[0]).toBeInstanceOf(AndFilter);
+        const left = oneOfFilter.filters[0] as AndFilter;
+        {
+          expect(left.filters.length).toBe(2);
+          expect(left.filters[0]).toBeInstanceOf(StartsWithFilter);
+          const startsWith = left.filters[0] as StartsWithFilter;
+          expect(startsWith.field).toBe("name");
+          expect(startsWith.value).toBe("bat");
+
+          expect(left.filters[1]).toBeInstanceOf(ContainsFilter);
+          const containsFilter = left.filters[1] as ContainsFilter;
+          expect(containsFilter.field).toBe("name");
+          expect(containsFilter.value).toBe("man");
+        }
+
+        {
+          expect(oneOfFilter.filters[1]).toBeInstanceOf(EqualsFilter);
+          const right = oneOfFilter.filters[1] as EqualsFilter;
+          expect(right.field).toBe("age");
+          expect(right.value).toBe("30");
+        }
+
+        {
+          expect(oneOfFilter.filters[2]).toBeInstanceOf(OrFilter);
+          const orFilter = oneOfFilter.filters[2] as OrFilter;
+
+          expect(orFilter.left).toBeInstanceOf(EqualsFilter);
+          const left = orFilter.left as EqualsFilter;
+          expect(left.field).toBe("city");
+          expect(left.value).toBe("gotham");
+
+          expect(orFilter.right).toBeInstanceOf(EqualsFilter);
+          const right = orFilter.right as EqualsFilter;
+          expect(right.field).toBe("city");
+          expect(right.value).toBe("bludheaven");
+        }
+      },
+    ],
   ];
 
   test.each(inheritedFieldOrCases)(
-    "should apply Or logic on inherited-field comma parts",
+    "should apply inherited logic {} on inherited-field comma parts",
     (expression, options, assertion) => {
+      // write the expression so that we can see what is being tested in the test output, since the test name is not descriptive enough to know what the expression is testing without looking at the code
+
       // Arrange / Act
       const result: IFilter = parse(expression, options);
 
