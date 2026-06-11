@@ -7,7 +7,7 @@
     "ghcr.io/devcontainers/features/copilot-cli": {},
     "ghcr.io/jpawlowski/devcontainer-features/cascadia-code:1": {},
     "ghcr.io/nils-geistmann/devcontainers-features/zsh": {
-      "plugins": "git npm gh git-prompt branch"
+      "plugins": "git npm gh"
     },
     "ghcr.io/devcontainers-extra/features/jest": {}
   },
